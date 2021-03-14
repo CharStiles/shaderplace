@@ -1,0 +1,10 @@
+export function testUndoText(tc: t.TestCase): void;
+export function testDoubleUndo(tc: t.TestCase): void;
+export function testUndoMap(tc: t.TestCase): void;
+export function testUndoArray(tc: t.TestCase): void;
+export function testUndoXml(tc: t.TestCase): void;
+export function testUndoEvents(tc: t.TestCase): void;
+export function testTrackClass(tc: t.TestCase): void;
+export function testTypeScope(tc: t.TestCase): void;
+export function testUndoDeleteFilter(tc: t.TestCase): void;
+import * as t from "lib0/testing";
