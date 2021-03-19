@@ -16,6 +16,7 @@ module.exports = {
     contentBase: path.join(__dirname),
     compress: true,
     inline:true,
+    disableHostCheck: true,
     publicPath: '/dist/'
   }
 }
