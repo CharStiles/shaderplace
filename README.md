@@ -3,8 +3,8 @@
 
 TODO:
 - undo manager 
-- url hash or something
+- git ignore
 - error messages
 - carot color
-- user names
+- usernames
 - better text readability 
