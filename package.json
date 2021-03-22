@@ -1,13 +1,13 @@
 {
   "name": "shader.place",
   "version": "0.0.1",
-  "description": "❤ place for shader collaboration",
+  "description": "❤ a place for shader collaboration ❤",
   "scripts": {
     "dist": "webpack --mode=production --watch",
     "start": "webpack-dev-server --open-page editor.html"
   },
   "author": "Char Stiles <contact@charstiles.com>",
-  "license": "UNLICENSE",
+  "license": "Anti-Capitalist Software License",
   "dependencies": {
     "codemirror": "^5.59.1",
     "serve": "^11.3.2",

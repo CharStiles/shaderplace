@@ -17,6 +17,7 @@ module.exports = {
     compress: true,
     inline:true,
     disableHostCheck: true,
+    watchContentBase: true,
     publicPath: '/dist/'
   }
 }
