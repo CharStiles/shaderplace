@@ -11,6 +11,7 @@ body {
   overflow : hidden;
   caret-color: red;
   
+  
 /*   margin: 2em; */
 }
 
@@ -79,9 +80,11 @@ footer {
 .hidden {
   display: none;
 }
-
-#container { width: 10%; height: 20%; caret-color: red;}
-
+#enterScreen { caret-color: red; text-align: center; z-index:-100}
+#container {}
+#room{width: 30%;    
+    margin-left: auto;
+    margin-right: auto}
 .CodeMirror {
   position: absolute !important;
   top: 0; left: 0;
