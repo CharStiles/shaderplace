@@ -2,15 +2,14 @@
 
 
 TODO:
-- undo manager 
+- undo manager
 - git ignore
-- error messages hoverover on line they occur on, like The Force
 - carot color
 - usernames to be above carot
 - better text readability (highlight)
 - add standard library and use with THREE's material.onBeforeCompile
 - add backbuffer
-- add webcam 
+- add webcam
 - add audio
 - [cant reproduce] fix scroll bug
 

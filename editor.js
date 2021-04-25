@@ -205,14 +205,12 @@ function checkFragmentShader(shaderCode, lint = false) {
   gl.shaderSource(shader, shaderCode);
   gl.compileShader(shader);
   let infoLog = gl.getShaderInfoLog(shader);
-  console.log(infoLog);
   let result = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
   let ret = [];
   if (!result) {
-    var errors = infoLog.split(/\r|\n/);
     console.log(infoLog);
+    var errors = infoLog.split(/\r|\n/);
     for (let error of errors){
-      console.log(error);
       var splitResult = error.split(":")
       ret.push( {
         message: splitResult[3] + splitResult[4],
@@ -250,12 +248,10 @@ function checkFragmentShader(shaderCode, lint = false) {
     for ( var i = 0; i < errors.length; i++) {
       var error = errors[i];
       if (error) {
-        // if (Number(error.line) <= 0) {
-        //   if (window.console) {
-        //     window.console.warn("Cannot display error (invalid line " + error.line + ")", error);
-        //   }
-        //   continue;
-        // }
+        if (Number(error.line) <= 0) {
+          console.warn("Cannot display error (invalid line " + error.line + ")", error);
+          continue;
+        }
 
         var start = error.character - 1, end = start + 1;
 
