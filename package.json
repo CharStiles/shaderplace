@@ -9,6 +9,7 @@
   "author": "Char Stiles <contact@charstiles.com>",
   "license": "Anti-Capitalist Software License",
   "dependencies": {
+    "@codemirror/lint": "^0.18.2",
     "codemirror": "^5.59.1",
     "serve": "^11.3.2",
     "three": "^0.126.1",

@@ -6,6 +6,7 @@ import * as Y from "yjs";
 import { WebsocketProvider } from "y-websocket";
 import { CodemirrorBinding } from "y-codemirror";
 import "codemirror/mode/clike/clike.js";
+import 'codemirror/addon/lint/lint';
 import __fragmentShader from "./fragmentShader.js";
 import * as THREE from "three";
 
@@ -25,7 +26,6 @@ var mesh;
 var socket;
 
 var isDirty = false;
-
 function initYdoc() {
   console.log("in init doc")
   const ydoc = new Y.Doc();
@@ -45,7 +45,9 @@ function initYdoc() {
   editor = CodeMirror(editorContainer, {
     value: _fragmentShader,
     lineNumbers: true,
-    mode: "x-shader/x-vertex"
+    mode: "x-shader/x-vertex",
+    gutters: ["CodeMirror-lint-markers"],
+    lint: true
   });
 
   const ytext = ydoc.getText("codemirror");
@@ -194,16 +196,73 @@ function fragmentShader() {
 
 // this returns false if the fragment shader cannot compile
 // true if it can
-function checkFragmentShader(shaderCode) {
+
+function checkFragmentShader(shaderCode, lint = false) {
   if (!gl) {
     return;
   }
   let shader = gl.createShader(gl.FRAGMENT_SHADER);
   gl.shaderSource(shader, shaderCode);
   gl.compileShader(shader);
-
+  let ret = gl.getShaderInfoLog(shader);
   let result = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
-  if (!result) console.log(gl.getShaderInfoLog(shader));
-
-  return result;
+  if (!result) {
+    console.log(ret);
+    var splitResult = ret.split(":")
+    ret = {
+      message: splitResult[3] + splitResult[4],
+      character: splitResult[1],
+      line: splitResult[2]
+    };
+  }
+  
+  if (lint){
+    return ret;
+    }
+    else{
+      return result; 
+    }
 }
+
+
+(function(mod) {
+    mod(CodeMirror);
+})(function(CodeMirror) {
+  "use strict";
+
+  function validator(text, options) {
+    var result = [];
+    var errors = checkFragmentShader(text, true);
+    if (errors) parseErrors(errors, result);
+    return result;
+  }
+
+  CodeMirror.registerHelper("lint", "x-shader/x-vertex", validator);
+
+  function parseErrors(error, output) {
+    //for ( var i = 0; i < errors.length; i++) {
+      // var error = errors[i];
+      if (error) {
+        // if (Number(error.line) <= 0) {
+        //   if (window.console) {
+        //     window.console.warn("Cannot display error (invalid line " + error.line + ")", error);
+        //   }
+        //   continue;
+        // }
+
+        var start = error.character - 1, end = start + 1;
+
+
+        // Convert to format expected by validation service
+        var hint = {
+          message: error.message,
+          severity: "error",
+          from: CodeMirror.Pos(Number(error.line) - 1, start),
+          to: CodeMirror.Pos(Number(error.line) - 1, end)
+        };
+
+        output.push(hint);
+      }
+    //}
+  }
+});
