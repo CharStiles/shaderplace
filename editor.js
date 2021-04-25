@@ -82,7 +82,9 @@ function initYdoc() {
   );
   // @ts-ignore
   window.example = { provider, ydoc, ytext, binding, Y };
-  editor.on("change", onEdit);
+  //editor.on("change", onEdit);
+  //linter takes care of calling checkFragmentShader so we dont need
+  // this editor.on function
   onEdit();
   init();
   animate();
@@ -123,8 +125,6 @@ function updateScene() {
 
   mesh = new THREE.Mesh(geometry, material);
   scene.add(mesh);
-
-  // shaderDirtyFlag = false;
 }
 
 window.onload = (event) => {
@@ -204,24 +204,31 @@ function checkFragmentShader(shaderCode, lint = false) {
   let shader = gl.createShader(gl.FRAGMENT_SHADER);
   gl.shaderSource(shader, shaderCode);
   gl.compileShader(shader);
-  let ret = gl.getShaderInfoLog(shader);
+  let infoLog = gl.getShaderInfoLog(shader);
+  console.log(infoLog);
   let result = gl.getShaderParameter(shader, gl.COMPILE_STATUS);
+  let ret = [];
   if (!result) {
-    console.log(ret);
-    var splitResult = ret.split(":")
-    ret = {
-      message: splitResult[3] + splitResult[4],
-      character: splitResult[1],
-      line: splitResult[2]
-    };
+    var errors = infoLog.split(/\r|\n/);
+    console.log(infoLog);
+    for (let error of errors){
+      console.log(error);
+      var splitResult = error.split(":")
+      ret.push( {
+        message: splitResult[3] + splitResult[4],
+        character: splitResult[1],
+        line: splitResult[2]
+      })
+    }
   }
   
-  if (lint){
-    return ret;
-    }
-    else{
-      return result; 
-    }
+  if (result) {
+    console.log("did update");
+    _fragmentShader = shaderCode;
+    isDirty = true;
+  }
+
+  return ret;
 }
 
 
@@ -239,9 +246,9 @@ function checkFragmentShader(shaderCode, lint = false) {
 
   CodeMirror.registerHelper("lint", "x-shader/x-vertex", validator);
 
-  function parseErrors(error, output) {
-    //for ( var i = 0; i < errors.length; i++) {
-      // var error = errors[i];
+  function parseErrors(errors, output) {
+    for ( var i = 0; i < errors.length; i++) {
+      var error = errors[i];
       if (error) {
         // if (Number(error.line) <= 0) {
         //   if (window.console) {
@@ -263,6 +270,6 @@ function checkFragmentShader(shaderCode, lint = false) {
 
         output.push(hint);
       }
-    //}
+    }
   }
 });
