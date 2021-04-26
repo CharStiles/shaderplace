@@ -3,7 +3,7 @@
 
 TODO:
 
-**High Priority **
+**High Priority**
 - overall profile and analyse efficiency
 - undo manager
 - git ignore
