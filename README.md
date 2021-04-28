@@ -1,7 +1,16 @@
 # shader place
 
+## requirements
+- node.js
 
-TODO:
+## quickstart!
+```
+$ git clone https://github.com/CharStiles/shaderplace.git
+$ npm i
+$ npm start
+```
+
+## TODO:
 
 **High Priority**
 - overall profile and analyse efficiency
