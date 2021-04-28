@@ -23,7 +23,12 @@ h1 {
 .bold {
   font-weight: bold;
 }
-
+#local-video {
+  position: absolute;
+  z-index: 1;
+  height: 20vh;
+  max-width: 100%;
+}
 p {
   max-width: 600px;
 }
