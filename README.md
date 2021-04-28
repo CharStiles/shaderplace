@@ -6,7 +6,6 @@ TODO:
 **High Priority**
 - overall profile and analyse efficiency
 - undo manager
-- git ignore
 - carot color
 - usernames to be above carot
 - better text readability (highlight)
