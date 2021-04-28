@@ -11,9 +11,9 @@ TODO:
 - usernames to be above carot
 - better text readability (highlight)
 - add standard library and use with THREE's material.onBeforeCompile
-- add backbuffer
-- add webcam
-- add audio
+- add backbuffer texture input
+- add webcam texture input
+- add audio input
 
 **Nice To have**
 - [cant reproduce] fix scroll bug
