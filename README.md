@@ -20,8 +20,10 @@ $ npm start
 - better text readability (highlight)
 - add standard library and use with THREE's material.onBeforeCompile
 - add backbuffer texture input
-- add webcam texture input
+- add webcam texture input (for multiple users)
 - add audio input
+- menu for info on globals, hot keys and meta info
+- hot keys for hiding code
 
 **Nice To have**
 - [cant reproduce] fix scroll bug
