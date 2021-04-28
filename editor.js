@@ -38,7 +38,7 @@ let handleError = function(err){
 };
 
 // Query the container to which the remote stream belong.
-let remoteContainer = document.getElementById("remote-container");
+let remoteContainer = document.getElementById("remote-streams");
 
 // Add video streams to the container.
 function addVideoStream(elementId){
@@ -66,6 +66,8 @@ var channelName = 'shaderplace';
 var cameraVideoProfile = '480p_4'; // 640 × 480 @ 30fps  & 750kbs
 var screenVideoProfile = '480p_2'; // 640 × 480 @ 30fps
 
+var uniformVideos = [];
+
 // create client instances for camera (client) and screen share (screenClient)
 var client = AgoraRTC.createClient({mode: 'rtc', codec: "h264"}); // h264 better detail at a higher motion
 var screenClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'}); // use the vp8 for better detail in low motion
@@ -86,85 +88,70 @@ var localStreams = {
 
 var mainStreamId; // reference to main stream
 var screenShareActive = false; // flag for screen share 
+// initAgora();
+function initAgora(){
+  // init Agora SDK
+  client.init(agoraAppId, function () {
+    console.log("AgoraRTC client initialized");
+    joinChannel(); // join channel upon successfull init
+  }, function (err) {
+    console.log("[ERROR] : AgoraRTC client init failed", err);
+  });
 
-// init Agora SDK
-client.init(agoraAppId, function () {
-  console.log("AgoraRTC client initialized");
-  joinChannel(); // join channel upon successfull init
-}, function (err) {
-  console.log("[ERROR] : AgoraRTC client init failed", err);
-});
+  client.on('stream-published', function (evt) {
+    console.log("Publish local stream successfully");
+  });
 
-client.on('stream-published', function (evt) {
-  console.log("Publish local stream successfully");
-});
-
-// connect remote streams
-client.on('stream-added', function (evt) {
-  var stream = evt.stream;
-  var streamId = stream.getId();
-  console.log("new stream added: " + streamId);
-  // Check if the stream is local
-  if (streamId != localStreams.screen.id) {
-    console.log('subscribe to remote stream:' + streamId);
-    // Subscribe to the stream.
-    client.subscribe(stream, function (err) {
-      console.log("[ERROR] : subscribe stream failed", err);
-    });
-  }
-});
-
-client.on('stream-subscribed', function (evt) {
-  var remoteStream = evt.stream;
-  var remoteId = remoteStream.getId();
-  remoteStreams[remoteId] = remoteStream;
-  console.log("Subscribe remote stream successfully: " + remoteId);
-  if( $('#full-screen-video').is(':empty') ) { 
-    mainStreamId = remoteId;
-    remoteStream.play('full-screen-video');
-  } else {
-    addRemoteStreamMiniView(remoteStream);
-  }
-});
-
-// remove the remote-container when a user leaves the channel
-client.on("peer-leave", function(evt) {
-  var streamId = evt.stream.getId(); // the the stream id
-  if(remoteStreams[streamId] != undefined) {
-    remoteStreams[streamId].stop(); // stop playing the feed
-    delete remoteStreams[streamId]; // remove stream from list
-    if (streamId == mainStreamId) {
-      var streamIds = Object.keys(remoteStreams);
-      var randomId = streamIds[Math.floor(Math.random()*streamIds.length)]; // select from the remaining streams
-      remoteStreams[randomId].stop(); // stop the stream's existing playback
-      var remoteContainerID = '#' + randomId + '_container';
-      $(remoteContainerID).empty().remove(); // remove the stream's miniView container
-      remoteStreams[randomId].play('full-screen-video'); // play the random stream as the main stream
-      mainStreamId = randomId; // set the new main remote stream
-    } else {
-      var remoteContainerID = '#' + streamId + '_container';
-      $(remoteContainerID).empty().remove(); // 
+  // connect remote streams
+  client.on('stream-added', function (evt) {
+    var stream = evt.stream;
+    var streamId = stream.getId();
+    console.log("new stream added: " + streamId);
+    // Check if the stream is local
+    if (streamId != localStreams.screen.id) {
+      console.log('subscribe to remote stream:' + streamId);
+      // Subscribe to the stream.
+      client.subscribe(stream, function (err) {
+        console.log("[ERROR] : subscribe stream failed", err);
+      });
     }
-  }
-});
+  });
 
-// show mute icon whenever a remote has muted their mic
-client.on("mute-audio", function (evt) {
-  console.log("Remote stream: " +  evt.uid + "has muted audio");
-});
+  client.on('stream-subscribed', function (evt) {
+    var remoteStream = evt.stream;
+    var remoteId = remoteStream.getId();
+    remoteStreams[remoteId] = remoteStream;
+    console.log("Subscribe remote stream successfully: " + remoteId);
+    createCameraStream(remoteId);
+    addVideoStream(remoteId);
+    // if( $('#full-screen-video').is(':empty') ) { 
+    //   mainStreamId = remoteId;
+    //   remoteStream.play('full-screen-video');
+    // } else {
+    //   addRemoteStreamMiniView(remoteStream);
+    // }
+  });
 
-client.on("unmute-audio", function (evt) {
-  console.log("Remote stream: " +  evt.uid + "has muted audio");
-});
+  // remove the remote-container when a user leaves the channel
+  client.on("peer-leave", function(evt) {
+    var streamId = evt.stream.getId(); // the the stream id
+    if(remoteStreams[streamId] != undefined) {
+      remoteStreams[streamId].stop(); // stop playing the feed
+      delete remoteStreams[streamId]; // remove stream from list
+      if (streamId == mainStreamId) {
+        var streamIds = Object.keys(remoteStreams);
+        var randomId = streamIds[Math.floor(Math.random()*streamIds.length)]; // select from the remaining streams
+        remoteStreams[randomId].stop(); // stop the stream's existing playback
+        var remoteContainerID = '#' + randomId + '_container';
+        mainStreamId = randomId; // set the new main remote stream
+      } else {
+        var remoteContainerID = '#' + streamId + '_container';
+        $(remoteContainerID).empty().remove(); // 
+      }
+    }
+  });
 
-// show user icon whenever a remote has disabled their video
-client.on("mute-video", function (evt) {
-  console.log("Remote stream: " +  evt.uid + "has muted video");
-});
-
-client.on("unmute-video", function (evt) {
-  console.log("Remote stream: " +  evt.uid + "has un-muted video");
-});
+}
 
 // join a channel
 function joinChannel() {
@@ -181,7 +168,7 @@ function joinChannel() {
 
 // video streams for channel
 function createCameraStream(uid) {
-  localStream = AgoraRTC.createStream({
+  var localStream = AgoraRTC.createStream({
     streamID: uid,
     audio: true,
     video: true,
@@ -199,9 +186,18 @@ function createCameraStream(uid) {
 
     // enableUiControls(localStream); // move after testing
     localStreams.camera.stream = localStream; // keep track of the camera stream for later
+    var localVideo = document.getElementById("player_"+(uid))
+    console.log(localVideo)
+    var video = localVideo.querySelector( 'video' );
+    // feed = new THREE.VideoTexture( video );
+    console.log("HELOO")
+    console.log(video)
+  
+    uniforms.u_feed.value = new THREE.VideoTexture(video);
   }, function (err) {
     console.log("[ERROR] : getUserMedia failed", err);
   });
+
 }
 
 function leaveChannel() {
@@ -318,24 +314,39 @@ function updateScene() {
 window.onload = (event) => {
   var goButton = document.getElementById("goButton");
   goButton.onclick = initYdoc;
+  var webcamButton = document.getElementById("webcam");
+  webcamButton.onclick = initAgora;
 }
 
 function init() {
+  document.getElementById("webcam").style.visibility = "visible";
   container = document.getElementById("container");
 
   threeCam = new THREE.Camera();
   threeCam.position.z = 1;
 
   var video = document.querySelector( 'video' );
-  // feed = new THREE.VideoTexture( video );
-
   uniforms = {
     u_time: { type: "f", value: 1.0 },
     u_resolution: { type: "v2", value: new THREE.Vector2() },
     u_mouse: { type: "v2", value: new THREE.Vector2() },
     u_camRot: { type: "v3", value: new THREE.Vector3() },
-    u_feed: {type: "", value: new THREE.VideoTexture(video)}
+    u_feed: {type: "", value: new THREE.VideoTexture( video )},
+    u_feed0: {type: "", value: new THREE.VideoTexture( video )},
+    u_feed1: {type: "", value: new THREE.VideoTexture( video )},
+    u_feed2: {type: "", value: new THREE.VideoTexture( video )},
+    u_feed3: {type: "", value: new THREE.VideoTexture( video )},
+    u_feed4: {type: "", value: new THREE.VideoTexture( video )},
+    u_feed5: {type: "", value: new THREE.VideoTexture( video )},
+    u_feed6: {type: "", value: new THREE.VideoTexture( video )},
+    u_feed7: {type: "", value: new THREE.VideoTexture( video )},
+    u_feed8: {type: "", value: new THREE.VideoTexture( video )},
+    u_feed9: {type: "", value: new THREE.VideoTexture( video )}
+
   };
+
+  uniformVideos [0] = uniforms.u_feed.value;
+  uniformVideos [1] = uniforms.u_feed0.value;
 
   updateScene();
   container = document.getElementById("container");

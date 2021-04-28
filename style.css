@@ -97,8 +97,33 @@ footer {
   text-shadow: 1px 1px #555555;
   /* width: 50%; */
   height: 100% !important;
-  scrollbar-color: rgba(0.5,0.5,0.5,1.0) rgba(0.5,0.5,0.5,.0)
+  scrollbar-color: rgba(0.5,0.5,0.5,1.0) rgba(0.5,0.5,0.5,.0);
   caret-color: red;
+}
+
+.float{
+  font-family:Verdana, Geneva, sans-serif;
+	font-size:18px;
+	background-color:#CCC;
+	position:fixed;
+	width:60px;
+	height:60px;
+	bottom:40px;
+	right:40px;
+	background-color:#0C9;
+	color:#FFF;
+	border-radius:50px;
+	text-align:center;
+	box-shadow: 2px 2px 3px #999;
+  background: white;
+  content: url('img/cam.png');
+  vertical-align: -0.125em;
+  visibility: hidden;
+
+}
+
+.my-float{
+	margin-top:22px;
 }
 
 #welcome-screen {

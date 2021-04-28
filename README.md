@@ -9,6 +9,7 @@ $ git clone https://github.com/CharStiles/shaderplace.git
 $ npm i
 $ npm start
 ```
+go to http://localhost:8080/
 
 ## TODO:
 
@@ -24,6 +25,7 @@ $ npm start
 - add audio input
 - menu for info on globals, hot keys and meta info
 - hot keys for hiding code
+- organize code
 
 **Nice To have**
 - [cant reproduce] fix scroll bug
