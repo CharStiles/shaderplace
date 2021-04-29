@@ -4,7 +4,7 @@
   "description": "❤ a place for shader collaboration ❤",
   "scripts": {
     "dist": "webpack --mode=production --watch",
-    "start": "webpack-dev-server"
+    "start": "webpack-dev-server --open-page index.html"
   },
   "author": "Char Stiles <contact@charstiles.com>",
   "license": "Anti-Capitalist Software License",

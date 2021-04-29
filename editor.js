@@ -11,9 +11,6 @@ import __fragmentShader from "./fragmentShader.js";
 import * as THREE from "three";
 import AgoraRTC from 'agora-rtc-sdk'
 
-if (window.isProduction && window.location.protocol !== "https:") {
-  window.location = "https://" + window.location.hostname;
-}
 
 var container;
 var threeCam, scene, renderer;
@@ -194,6 +191,7 @@ function createCameraStream(uid) {
     console.log(video)
   
     uniforms.u_feed.value = new THREE.VideoTexture(video);
+    
   }, function (err) {
     console.log("[ERROR] : getUserMedia failed", err);
   });

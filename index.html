@@ -11,6 +11,11 @@
     <link rel="stylesheet" href="./node_modules/codemirror/addon/lint/lint.css">
   </head>
   <body>
+    <script>
+      if (window.isProduction && window.location.protocol !== "https:") {
+        window.location = "https://" + window.location.hostname;
+      }
+      </script>
     <div id="remote-streams-container">
       <div id="remote-streams">
         <!-- insert remote streams dynamically -->
