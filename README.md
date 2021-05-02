@@ -1,9 +1,10 @@
-# shader place
+# Shader Place
+A realtime livecode GLSL editor
 
-## requirements
+## Requirements
 - node.js
 
-## quickstart!
+## Quickstart!
 ```
 $ git clone https://github.com/CharStiles/shaderplace.git
 $ npm i
