@@ -29,6 +29,7 @@ go to http://localhost:8080/
 - organize code
 
 **Nice To have**
+- fav icon
 - [cant reproduce] fix scroll bug
 - webcam mice??
 - input images
