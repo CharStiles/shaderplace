@@ -32,6 +32,11 @@ vec3 rotateQuat( vec4 quat, vec3 vec )
 {
 return vec + 2.0 * cross( cross( vec, quat.xyz ) + quat.w * vec, quat.xyz );
 }
+float random (vec2 st) {
+    return fract(sin(dot(st.xy,
+                         vec2(12.9898,78.233)))*
+        43758.5453123);
+}
 
 vec3 lookAt(vec2 uv, vec3 camOrigin, vec3 camTarget){
     vec3 zAxis = normalize(camTarget - camOrigin);
@@ -112,7 +117,7 @@ vec4 trace (vec3 origin, vec3 direction){
         
         // Advance along the ray trajectory the amount that we know the ray
         // can travel without going through an object.
-        positionOnRay += dist * direction;
+        positionOnRay += dist * direction + random(positionOnRay.xy)*0.1;
         
         // Total distance is keeping track of how much the ray has traveled
         // thus far.
@@ -166,7 +171,38 @@ void main(void)
     vec3 dir = lookAt(uv, camOrigin, dirToLook);
 
  
-    gl_FragColor = trace(camOrigin, dir);
+    gl_FragColor = max(trace(camOrigin, dir),0.2);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 `;
