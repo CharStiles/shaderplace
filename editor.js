@@ -9,8 +9,8 @@ import "codemirror/mode/clike/clike.js";
 import 'codemirror/addon/lint/lint';
 import __fragmentShader from "./fragmentShader.js";
 import * as THREE from "three";
-import AgoraRTC from 'agora-rtc-sdk'
 
+const OT = require('@opentok/client');
 
 var container;
 var threeCam, scene, renderer;
@@ -19,197 +19,98 @@ var uniforms;
 var gl;
 
 var editor;
-
-// meow globals
 var geometry;
 var material;
 var mesh;
-var localStream;
 
-var socket;
-
+var initilizedOpenTok = false;
 var isDirty = false;
-// Handle errors.
-let handleError = function(err){
-  console.log("Error: ", err);
-};
-
-// Query the container to which the remote stream belong.
-let remoteContainer = document.getElementById("remote-streams");
-
-// Add video streams to the container.
-function addVideoStream(elementId){
-  // Creates a new div for every stream
-  let streamDiv = document.createElement("div");
-  // Assigns the elementId to the div.
-  streamDiv.id = elementId;
-  // Takes care of the lateral inversion
-  streamDiv.style.transform = "rotateY(180deg)";
-  // Adds the div to the container.
-  remoteContainer.appendChild(streamDiv);
-};
-
-// Remove the video stream from the container.
-function removeVideoStream(elementId) {
-  let remoteDiv = document.getElementById(elementId);
-  if (remoteDiv) remoteDiv.parentNode.removeChild(remoteDiv);
-};
-
-// app / channel settings
-var agoraAppId = "6ba11f032cf044919d56ce391454bf06"; // Set your Agora App ID
-var channelName = 'shaderplace';
-
-// video profile settings
-var cameraVideoProfile = '480p_4'; // 640 × 480 @ 30fps  & 750kbs
-var screenVideoProfile = '480p_2'; // 640 × 480 @ 30fps
-
 var uniformVideos = [];
 
-// create client instances for camera (client) and screen share (screenClient)
-var client = AgoraRTC.createClient({mode: 'rtc', codec: "h264"}); // h264 better detail at a higher motion
-var screenClient = AgoraRTC.createClient({mode: 'rtc', codec: 'vp8'}); // use the vp8 for better detail in low motion
+var apiKey = "47217534";
+var sessionId = "1_MX40NzIxNzUzNH5-MTYyMjU5MzMzMjE2NH45OW9KUlREOUlMd0RWWWNLVG5iYzdEemJ-fg";
+var token = "T1==cGFydG5lcl9pZD00NzIxNzUzNCZzaWc9ODZjYjEwN2RiNjkxMDI4MjIxOTQ5NDIwZGVjNzBjMGViNTgxZDk2MzpzZXNzaW9uX2lkPTFfTVg0ME56SXhOelV6Tkg1LU1UWXlNalU1TXpNek1qRTJOSDQ1T1c5S1VsUkVPVWxNZDBSV1dXTkxWRzVpWXpkRWVtSi1mZyZjcmVhdGVfdGltZT0xNjIyNTkzMzUxJm5vbmNlPTAuNjk0Nzg3MDQ4MTAzMzc2OSZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNjI1MTg1MzUwJmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9";
 
-// stream references (keep track of active streams) 
-var remoteStreams = {}; // remote streams obj struct [id : stream] 
-
-var localStreams = {
-  camera: {
-    id: "",
-    stream: {}
-  },
-  screen: {
-    id: "",
-    stream: {}
+// Handling all of our errors here by alerting them
+function handleError(error) {
+  if (error) {
+    alert(error.message);
   }
-};
+}
 
-var mainStreamId; // reference to main stream
-var screenShareActive = false; // flag for screen share 
-// initAgora();
-function initAgora(){
-  // init Agora SDK
-  client.init(agoraAppId, function () {
-    console.log("AgoraRTC client initialized");
-    joinChannel(); // join channel upon successfull init
-  }, function (err) {
-    console.log("[ERROR] : AgoraRTC client init failed", err);
-  });
+// initializeSession();
 
-  client.on('stream-published', function (evt) {
-    console.log("Publish local stream successfully");
-  });
+function initializeSession() {
+  if (initilizedOpenTok == true){
+    return;
+  }
+  initilizedOpenTok = true;
+  console.log("init opentok")
+  var session = OT.initSession(apiKey, sessionId);
 
-  // connect remote streams
-  client.on('stream-added', function (evt) {
-    var stream = evt.stream;
-    var streamId = stream.getId();
-    console.log("new stream added: " + streamId);
-    // Check if the stream is local
-    if (streamId != localStreams.screen.id) {
-      console.log('subscribe to remote stream:' + streamId);
-      // Subscribe to the stream.
-      client.subscribe(stream, function (err) {
-        console.log("[ERROR] : subscribe stream failed", err);
-      });
-    }
-  });
+  // Subscribe to a newly created stream
+  session.on('streamCreated', function(event) {
+    console.log(event.stream);
 
-  client.on('stream-subscribed', function (evt) {
-    var remoteStream = evt.stream;
-    var remoteId = remoteStream.getId();
-    remoteStreams[remoteId] = remoteStream;
-    console.log("Subscribe remote stream successfully: " + remoteId);
-    createCameraStream(remoteId);
-    addVideoStream(remoteId);
-    // if( $('#full-screen-video').is(':empty') ) { 
-    //   mainStreamId = remoteId;
-    //   remoteStream.play('full-screen-video');
-    // } else {
-    //   addRemoteStreamMiniView(remoteStream);
-    // }
-  });
+    var sub = session.subscribe(event.stream, 'subscriber', {
+      insertMode: 'append',
+      width: '0',
+      height: '0',
+      // insertDefaultUI: false
 
-  // remove the remote-container when a user leaves the channel
-  client.on("peer-leave", function(evt) {
-    var streamId = evt.stream.getId(); // the the stream id
-    if(remoteStreams[streamId] != undefined) {
-      remoteStreams[streamId].stop(); // stop playing the feed
-      delete remoteStreams[streamId]; // remove stream from list
-      if (streamId == mainStreamId) {
-        var streamIds = Object.keys(remoteStreams);
-        var randomId = streamIds[Math.floor(Math.random()*streamIds.length)]; // select from the remaining streams
-        remoteStreams[randomId].stop(); // stop the stream's existing playback
-        var remoteContainerID = '#' + randomId + '_container';
-        mainStreamId = randomId; // set the new main remote stream
-      } else {
-        var remoteContainerID = '#' + streamId + '_container';
-        $(remoteContainerID).empty().remove(); // 
+    }, handleError);
+    sub.on('videoElementCreated', function(event) {
+      console.log(event);
+      console.log("session video element");
+      var remoteVideo = document.getElementById("subscriber")
+      var video = remoteVideo.querySelector( 'video' );
+      if(video){
+        uniforms.u_feed0.value = new THREE.VideoTexture(video);
       }
+  
+    }) 
+      
+    })
+
+
+  // Create a publisher
+  var publisher = OT.initPublisher('publisher', {
+    audioSource: false,
+    insertMode: 'append',
+    width: '0%',
+    height: '0%',
+
+  }, handleError);
+
+  publisher.on('videoElementCreated', function(event) {
+    console.log(event);
+    console.log("video element");
+    var remoteVideo = document.getElementById("publisher")
+    var video = remoteVideo.querySelector( 'video' );
+    if(video){
+      uniforms.u_feed.value = new THREE.VideoTexture(video);
+    }
+
+  }) 
+  // Connect to the session
+  session.connect(token, function(error) {
+
+    // 1. maybe there is another event we xan listn for?
+    // 2. because then we can set some call back video
+    // 3. we can block or stick it in somne promise or something like that
+
+    // If the connection is successful, initialize a publisher and publish to the session
+    if (error) {
+      handleError(error);
+    } else {
+      session.publish(publisher, handleError);
+
     }
   });
+   
 
 }
 
-// join a channel
-function joinChannel() {
-  var token = generateToken();
-  var userID = null; // set to null to auto generate uid on successfull connection
-  client.join(token, channelName, userID, function(uid) {
-      console.log("User " + uid + " join channel successfully");
-      createCameraStream(uid);
-      localStreams.camera.id = uid; // keep track of the stream uid 
-  }, function(err) {
-      console.log("[ERROR] : join channel failed", err);
-  });
-}
-
-// video streams for channel
-function createCameraStream(uid) {
-  var localStream = AgoraRTC.createStream({
-    streamID: uid,
-    audio: true,
-    video: true,
-    screen: false
-  });
-  localStream.setVideoProfile(cameraVideoProfile);
-  localStream.init(function() {
-    console.log("getUserMedia successfully");
-    // TODO: add check for other streams. play local stream full size if alone in channel
-    localStream.play('local-video'); // play the given stream within the local-video div
-    // publish local stream
-    client.publish(localStream, function (err) {
-      console.log("[ERROR] : publish local stream error: " + err);
-    });
-
-    // enableUiControls(localStream); // move after testing
-    localStreams.camera.stream = localStream; // keep track of the camera stream for later
-    var localVideo = document.getElementById("player_"+(uid))
-    console.log(localVideo)
-    var video = localVideo.querySelector( 'video' );
-    // feed = new THREE.VideoTexture( video );
-    console.log("HELOO")
-    console.log(video)
-  
-    uniforms.u_feed.value = new THREE.VideoTexture(video);
-    
-  }, function (err) {
-    console.log("[ERROR] : getUserMedia failed", err);
-  });
-
-}
-
-function leaveChannel() {
-  client.leave(function() {
-    console.log("client leaves channel");
-  }, function(err) {
-    console.log("client leave failed ", err); //error handling
-  });
-}
-
-// use tokens for added security
-function generateToken() {
-  return null; // TODO: add a token generation
-}
 
 function initYdoc() {
   console.log("in init doc")
@@ -313,7 +214,7 @@ window.onload = (event) => {
   var goButton = document.getElementById("goButton");
   goButton.onclick = initYdoc;
   var webcamButton = document.getElementById("webcam");
-  webcamButton.onclick = initAgora;
+  webcamButton.onclick = initializeSession;
 }
 
 function init() {

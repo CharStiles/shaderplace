@@ -231,6 +231,7 @@ footer {
 }
 
 #subscriber {
+  visibility:hidden;
   position: absolute;
   left: 0;
   top: 0;
@@ -240,6 +241,7 @@ footer {
 }
 
 #publisher {
+  visibility:hidden;
   position: absolute;
   width: 360px;
   height: 240px;
