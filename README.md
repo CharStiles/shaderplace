@@ -7,6 +7,7 @@ A realtime livecode GLSL editor
 ## Quickstart!
 ```
 $ git clone https://github.com/CharStiles/shaderplace.git
+$ cd shdaerplace
 $ npm i
 $ npm start
 ```
