@@ -38,7 +38,6 @@ function handleError(error) {
   }
 }
 
-// initializeSession();
 
 function initializeSession() {
   if (initilizedOpenTok == true){
@@ -215,6 +214,7 @@ window.onload = (event) => {
   goButton.onclick = initYdoc;
   var webcamButton = document.getElementById("webcam");
   webcamButton.onclick = initializeSession;
+  goButton.click();
 }
 
 function init() {

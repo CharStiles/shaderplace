@@ -112,7 +112,7 @@ footer {
   /* width: 50%; */
   height: 100% !important;
   scrollbar-color: rgba(0.5,0.5,0.5,1.0) rgba(0.5,0.5,0.5,.0);
-  caret-color: red;
+  caret-color: red !important;
 }
 
 .float{
@@ -220,7 +220,24 @@ footer {
   border-right: 1px solid #000;
   background-color: #000000;
 }
-.cm-s-default .cm-comment {color: #fff; font-size:15px;}
+.cm-s-default .cm-comment {
+  color: rgb(93, 93, 93);
+  text-shadow: 0px 0px 5px black;
+}
+span[role=presentation] { 
+  background-color: rgba(255, 255, 255, 0.609); 
+}
+span.cm-tab[role=presentation] { 
+  background-color: transparent ; 
+}
+.CodeMirror-line{   
+  caret-color: rgb(1, 255, 22) !important; 
+  text-shadow: 1px 1px 2px rgb(112, 112, 112), 0 0 25px rgb(155, 155, 155), 0 0 5px rgb(143, 143, 143);
+  /* -1px 0 rgb(231, 231, 231), 0 1px rgb(255, 255, 255), 1px 0 white, 0 -1px white; */
+}
+/* element[role="presentation"] {
+  background-color: rgba(170, 223, 241, 0.424) !important; /*for overriding the old css styles */
+  /* } */ */
 
 #videos {
   position: relative;
