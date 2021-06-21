@@ -214,7 +214,7 @@ window.onload = (event) => {
   goButton.onclick = initYdoc;
   var webcamButton = document.getElementById("webcam");
   webcamButton.onclick = initializeSession;
-  goButton.click();
+  //goButton.click();
 }
 
 function init() {
