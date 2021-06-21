@@ -221,8 +221,9 @@ footer {
   background-color: #000000;
 }
 .cm-s-default .cm-comment {
-  color: rgb(93, 93, 93);
-  text-shadow: 0px 0px 5px black;
+  color: rgb(255, 255, 255);
+  mix-blend-mode: difference;
+  text-shadow: 0px 0px 5px black,0px 0px 15px black;
 }
 span[role=presentation] { 
   background-color: rgba(255, 255, 255, 0.609); 
