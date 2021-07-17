@@ -8,7 +8,10 @@ precision mediump float;
 uniform vec2 u_resolution;
 uniform vec2 u_mouse;
 uniform float u_time;
+uniform vec2 resolution;
+uniform float time;
 uniform sampler2D u_feed;
+uniform sampler2D u_feed0;
 
 // main is a reserved function that is going to be called first
 void main(void)
