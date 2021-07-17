@@ -228,6 +228,8 @@ function init() {
   uniforms = {
     u_time: { type: "f", value: 1.0 },
     u_resolution: { type: "v2", value: new THREE.Vector2() },
+    time: { type: "f", value: 1.0 },
+    resolution: { type: "v2", value: new THREE.Vector2() },
     u_mouse: { type: "v2", value: new THREE.Vector2() },
     u_camRot: { type: "v3", value: new THREE.Vector3() },
     u_feed: {type: "", value: new THREE.VideoTexture( video )},
@@ -264,6 +266,8 @@ function onWindowResize(event) {
   renderer.setSize(window.innerWidth, window.innerHeight);
   uniforms.u_resolution.value.x = renderer.domElement.width;
   uniforms.u_resolution.value.y = renderer.domElement.height;
+  uniforms.resolution.value.x = renderer.domElement.width;
+  uniforms.resolution.value.y = renderer.domElement.height;
 }
 
 function animate() {
@@ -276,6 +280,7 @@ function render() {
     updateScene();
   }
   uniforms.u_time.value += 0.05;
+  uniforms.time.value += 0.05;
   // uniforms.u_feed.value = feed;
   renderer.render(scene, threeCam);
 }
