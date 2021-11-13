@@ -114,7 +114,12 @@ function initializeSession() {
 function initYdoc() {
   console.log("in init doc")
   const ydoc = new Y.Doc();
-  var room = document.getElementById("room").value;
+
+  const searchParams = new URLSearchParams(window.location.search);
+  var room = "";
+  if (searchParams.has("room")){
+    room = searchParams.get("room");
+  }
 
   const provider = new WebsocketProvider(
     "wss://demos.yjs.dev",
@@ -210,11 +215,9 @@ function updateScene() {
 }
 
 window.onload = (event) => {
-  var goButton = document.getElementById("goButton");
-  goButton.onclick = initYdoc;
   var webcamButton = document.getElementById("webcam");
   webcamButton.onclick = initializeSession;
-  //goButton.click();
+  initYdoc();
 }
 
 function init() {
