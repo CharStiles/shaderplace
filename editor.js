@@ -110,6 +110,19 @@ function initializeSession() {
 
 }
 
+function isInPresentationMode() {
+  if (window.location.pathname.split('/').pop() == 'present.html') {
+    return true;
+  }
+  return false;
+}
+
+function addCodeMirrorPresentModifier() {
+  const codeMirrorDiv = document.querySelector(".CodeMirror");
+  if (codeMirrorDiv) {
+    codeMirrorDiv.classList.add("CodeMirror-present");
+  }
+}
 
 function initYdoc() {
   console.log("in init doc")
@@ -126,10 +139,8 @@ function initYdoc() {
     room,
     ydoc
   );
-  const editorContainer = document.createElement("div");
-  editorContainer.setAttribute("id", "editor");
-  document.body.insertBefore(editorContainer, null);
 
+  var editorContainer = document.getElementById("editor");
   editor = CodeMirror(editorContainer, {
     value: _fragmentShader,
     lineNumbers: true,
@@ -166,6 +177,9 @@ function initYdoc() {
     }
   );
 
+  if (isInPresentationMode()) {
+    addCodeMirrorPresentModifier();
+  }
 
   // @ts-ignore
   window.example = { provider, ydoc, ytext, binding, Y };
@@ -266,7 +280,10 @@ function init() {
 }
 
 function onWindowResize(event) {
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(container.offsetWidth, container.offsetHeight);
+  if (isInPresentationMode()) {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
   uniforms.u_resolution.value.x = renderer.domElement.width;
   uniforms.u_resolution.value.y = renderer.domElement.height;
   uniforms.resolution.value.x = renderer.domElement.width;
