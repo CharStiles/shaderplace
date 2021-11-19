@@ -146,7 +146,8 @@ function initYdoc() {
     lineNumbers: true,
     mode: "x-shader/x-vertex",
     gutters: ["CodeMirror-lint-markers"],
-    lint: true
+    lint: true,
+    lineWrapping: !isInPresentationMode()
   });
 
   const ytext = ydoc.getText("codemirror");

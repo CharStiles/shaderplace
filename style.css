@@ -112,6 +112,7 @@ footer {
 
 .editor {
   width: 45%;
+  max-height: 100vh;
 }
 
 .displaywrapper {
