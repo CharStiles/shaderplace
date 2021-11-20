@@ -99,20 +99,55 @@ footer {
 .hidden {
   display: none;
 }
+
+.wrapper {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: left;
+  align-items: left;
+  height: 100%;
+  width: 100%;
+}
+
+.editor {
+  width: 45%;
+  max-height: 100vh;
+}
+
+.displaywrapper {
+  height: 100%;
+  width: 100%;
+}
+
 #enterScreen { caret-color: red; text-align: center; z-index:-100}
-#container {}
+
+.container-edit {
+  height: 100vh;
+  width: 100%;
+}
+
+.container-present {
+  height: 100%;
+  width: 100%;
+}
+
 #room{width: 30%;    
     margin-left: auto;
     margin-right: auto}
-.CodeMirror {
-  position: absolute !important;
-  top: 0; left: 0;
+
+.CodeMirror-present {
   background-color: rgba(255, 255, 255, 0.0) !important;
   text-shadow: 1px 1px #555555;
-  /* width: 50%; */
-  height: 100% !important;
-  scrollbar-color: rgba(0.5,0.5,0.5,1.0) rgba(0.5,0.5,0.5,.0);
   caret-color: red !important;
+  scrollbar-color: rgba(0.5,0.5,0.5,1.0) rgba(0.5,0.5,0.5,.0);
+  position: absolute !important;
+  top: 0;
+  left: 0;
+}
+
+.CodeMirror {
+  height: 100% !important;
 }
 
 .float{

@@ -110,27 +110,44 @@ function initializeSession() {
 
 }
 
+function isInPresentationMode() {
+  if (window.location.pathname.split('/').pop() == 'present.html') {
+    return true;
+  }
+  return false;
+}
+
+function addCodeMirrorPresentModifier() {
+  const codeMirrorDiv = document.querySelector(".CodeMirror");
+  if (codeMirrorDiv) {
+    codeMirrorDiv.classList.add("CodeMirror-present");
+  }
+}
 
 function initYdoc() {
   console.log("in init doc")
   const ydoc = new Y.Doc();
-  var room = document.getElementById("room").value;
+
+  const searchParams = new URLSearchParams(window.location.search);
+  var room = "";
+  if (searchParams.has("room")){
+    room = searchParams.get("room");
+  }
 
   const provider = new WebsocketProvider(
     "wss://demos.yjs.dev",
     room,
     ydoc
   );
-  const editorContainer = document.createElement("div");
-  editorContainer.setAttribute("id", "editor");
-  document.body.insertBefore(editorContainer, null);
 
+  var editorContainer = document.getElementById("editor");
   editor = CodeMirror(editorContainer, {
     value: _fragmentShader,
     lineNumbers: true,
     mode: "x-shader/x-vertex",
     gutters: ["CodeMirror-lint-markers"],
-    lint: true
+    lint: true,
+    lineWrapping: !isInPresentationMode()
   });
 
   const ytext = ydoc.getText("codemirror");
@@ -161,6 +178,9 @@ function initYdoc() {
     }
   );
 
+  if (isInPresentationMode()) {
+    addCodeMirrorPresentModifier();
+  }
 
   // @ts-ignore
   window.example = { provider, ydoc, ytext, binding, Y };
@@ -210,11 +230,9 @@ function updateScene() {
 }
 
 window.onload = (event) => {
-  var goButton = document.getElementById("goButton");
-  goButton.onclick = initYdoc;
   var webcamButton = document.getElementById("webcam");
   webcamButton.onclick = initializeSession;
-  //goButton.click();
+  initYdoc();
 }
 
 function init() {
@@ -263,7 +281,10 @@ function init() {
 }
 
 function onWindowResize(event) {
-  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setSize(container.offsetWidth, container.offsetHeight);
+  if (isInPresentationMode()) {
+    renderer.setSize(window.innerWidth, window.innerHeight);
+  }
   uniforms.u_resolution.value.x = renderer.domElement.width;
   uniforms.u_resolution.value.y = renderer.domElement.height;
   uniforms.resolution.value.x = renderer.domElement.width;

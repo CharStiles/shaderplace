@@ -4,7 +4,8 @@ module.exports = {
   mode: 'development',
   devtool: 'source-map',
   entry: {
-    codemirror: './editor.js'
+    codemirror: './editor.js',
+    index: './index.js'
   },
   output: {
     globalObject: 'self',
