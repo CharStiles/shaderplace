@@ -112,7 +112,8 @@ footer {
 
 .editor {
   width: 45%;
-  max-height: 100vh;
+  /* overflow: scroll; */
+  /* max-height: 100vh; */
 }
 
 .displaywrapper {
@@ -301,4 +302,7 @@ span.cm-tab[role=presentation] {
   bottom: 10px;
   left: 10px;
   z-index: 100;
+}
+canvas{
+  position: fixed; 
 }

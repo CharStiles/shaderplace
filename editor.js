@@ -146,8 +146,8 @@ function initYdoc() {
     lineNumbers: true,
     mode: "x-shader/x-vertex",
     gutters: ["CodeMirror-lint-markers"],
-    lint: true,
-    lineWrapping: !isInPresentationMode()
+    lint: true//,
+    // lineWrapping: !isInPresentationMode()
   });
 
   const ytext = ydoc.getText("codemirror");
@@ -230,13 +230,13 @@ function updateScene() {
 }
 
 window.onload = (event) => {
-  var webcamButton = document.getElementById("webcam");
-  webcamButton.onclick = initializeSession;
+  // var webcamButton = document.getElementById("webcam");
+  // webcamButton.onclick = initializeSession;
   initYdoc();
 }
 
 function init() {
-  document.getElementById("webcam").style.visibility = "visible";
+ // document.getElementById("webcam").style.visibility = "visible";
   container = document.getElementById("container");
 
   threeCam = new THREE.Camera();
