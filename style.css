@@ -107,7 +107,7 @@ footer {
 .editor {
   width: 45%;
   /* overflow: scroll; */
-  /* max-height: 100vh; */
+  max-height: 100vh;
 }
 
 .displaywrapper {
