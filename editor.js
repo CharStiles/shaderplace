@@ -7,7 +7,7 @@ import { WebsocketProvider } from "y-websocket";
 import { CodemirrorBinding } from "y-codemirror";
 import "codemirror/mode/clike/clike.js";
 import 'codemirror/addon/lint/lint';
-import __fragmentShader from "./fragmentShader.js";
+import {__fragmentShader, __vertexShader} from "./defaultShaders.js";
 import * as THREE from "three";
 
 const OT = require('@opentok/client');

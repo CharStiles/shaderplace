@@ -36,3 +36,24 @@ void main(void)
 }
 
 `;
+
+var _vertexShader = `
+    attribute vec3 aVertexPosition;
+    attribute vec4 aVertexColor;
+    attribute vec2 aVertexTime;
+
+    uniform mat4 uMVMatrix;
+    uniform mat4 uPMatrix;
+
+    varying vec4 vColor;
+    varying vec3 vPosition;
+    varying vec2 vTime;
+
+    void main(void) {
+        gl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);
+        vColor = aVertexColor / 2.0;
+        vPosition = aVertexPosition;
+        vTime = aVertexTime;
+    }
+`;
+
