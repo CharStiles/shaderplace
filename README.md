@@ -14,6 +14,11 @@ $ npm start
 go to http://localhost:8080/
 
 ## TODO:
+- Remove Three.js and replace with webGL
+- remove video sharing attempt
+- add backend
+- reorganize CSS
+- WebRTC implementation
 
 **High Priority**
 - overall profile and analyse efficiency
