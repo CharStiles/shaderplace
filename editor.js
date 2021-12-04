@@ -23,13 +23,7 @@ var geometry;
 var material;
 var mesh;
 
-var initilizedOpenTok = false;
 var isDirty = false;
-var uniformVideos = [];
-
-var apiKey = "47217534";
-var sessionId = "1_MX40NzIxNzUzNH5-MTYyMjU5MzMzMjE2NH45OW9KUlREOUlMd0RWWWNLVG5iYzdEemJ-fg";
-var token = "T1==cGFydG5lcl9pZD00NzIxNzUzNCZzaWc9ODZjYjEwN2RiNjkxMDI4MjIxOTQ5NDIwZGVjNzBjMGViNTgxZDk2MzpzZXNzaW9uX2lkPTFfTVg0ME56SXhOelV6Tkg1LU1UWXlNalU1TXpNek1qRTJOSDQ1T1c5S1VsUkVPVWxNZDBSV1dXTkxWRzVpWXpkRWVtSi1mZyZjcmVhdGVfdGltZT0xNjIyNTkzMzUxJm5vbmNlPTAuNjk0Nzg3MDQ4MTAzMzc2OSZyb2xlPXB1Ymxpc2hlciZleHBpcmVfdGltZT0xNjI1MTg1MzUwJmluaXRpYWxfbGF5b3V0X2NsYXNzX2xpc3Q9";
 
 // Handling all of our errors here by alerting them
 function handleError(error) {
@@ -38,77 +32,6 @@ function handleError(error) {
   }
 }
 
-
-function initializeSession() {
-  if (initilizedOpenTok == true){
-    return;
-  }
-  initilizedOpenTok = true;
-  console.log("init opentok")
-  var session = OT.initSession(apiKey, sessionId);
-
-  // Subscribe to a newly created stream
-  session.on('streamCreated', function(event) {
-    console.log(event.stream);
-
-    var sub = session.subscribe(event.stream, 'subscriber', {
-      insertMode: 'append',
-      width: '0',
-      height: '0',
-      // insertDefaultUI: false
-
-    }, handleError);
-    sub.on('videoElementCreated', function(event) {
-      console.log(event);
-      console.log("session video element");
-      var remoteVideo = document.getElementById("subscriber")
-      var video = remoteVideo.querySelector( 'video' );
-      if(video){
-        uniforms.u_feed0.value = new THREE.VideoTexture(video);
-      }
-  
-    }) 
-      
-    })
-
-
-  // Create a publisher
-  var publisher = OT.initPublisher('publisher', {
-    audioSource: false,
-    insertMode: 'append',
-    width: '0%',
-    height: '0%',
-
-  }, handleError);
-
-  publisher.on('videoElementCreated', function(event) {
-    console.log(event);
-    console.log("video element");
-    var remoteVideo = document.getElementById("publisher")
-    var video = remoteVideo.querySelector( 'video' );
-    if(video){
-      uniforms.u_feed.value = new THREE.VideoTexture(video);
-    }
-
-  }) 
-  // Connect to the session
-  session.connect(token, function(error) {
-
-    // 1. maybe there is another event we xan listn for?
-    // 2. because then we can set some call back video
-    // 3. we can block or stick it in somne promise or something like that
-
-    // If the connection is successful, initialize a publisher and publish to the session
-    if (error) {
-      handleError(error);
-    } else {
-      session.publish(publisher, handleError);
-
-    }
-  });
-   
-
-}
 
 function isInPresentationMode() {
   if (window.location.pathname.split('/').pop() == 'present.html') {
@@ -204,7 +127,6 @@ function updateShader(fragmentCode) {
     return;
   }
 
-  console.log("did update");
   _fragmentShader = fragmentCode;
 
   isDirty = true;
@@ -230,19 +152,15 @@ function updateScene() {
 }
 
 window.onload = (event) => {
-  // var webcamButton = document.getElementById("webcam");
-  // webcamButton.onclick = initializeSession;
   initYdoc();
 }
 
 function init() {
- // document.getElementById("webcam").style.visibility = "visible";
   container = document.getElementById("container");
 
   threeCam = new THREE.Camera();
   threeCam.position.z = 1;
 
-  var video = document.querySelector( 'video' );
   uniforms = {
     u_time: { type: "f", value: 1.0 },
     u_resolution: { type: "v2", value: new THREE.Vector2() },
@@ -250,22 +168,7 @@ function init() {
     resolution: { type: "v2", value: new THREE.Vector2() },
     u_mouse: { type: "v2", value: new THREE.Vector2() },
     u_camRot: { type: "v3", value: new THREE.Vector3() },
-    u_feed: {type: "", value: new THREE.VideoTexture( video )},
-    u_feed0: {type: "", value: new THREE.VideoTexture( video )},
-    u_feed1: {type: "", value: new THREE.VideoTexture( video )},
-    u_feed2: {type: "", value: new THREE.VideoTexture( video )},
-    u_feed3: {type: "", value: new THREE.VideoTexture( video )},
-    u_feed4: {type: "", value: new THREE.VideoTexture( video )},
-    u_feed5: {type: "", value: new THREE.VideoTexture( video )},
-    u_feed6: {type: "", value: new THREE.VideoTexture( video )},
-    u_feed7: {type: "", value: new THREE.VideoTexture( video )},
-    u_feed8: {type: "", value: new THREE.VideoTexture( video )},
-    u_feed9: {type: "", value: new THREE.VideoTexture( video )}
-
   };
-
-  uniformVideos [0] = uniforms.u_feed.value;
-  uniformVideos [1] = uniforms.u_feed0.value;
 
   updateScene();
   container = document.getElementById("container");
@@ -302,7 +205,6 @@ function render() {
   }
   uniforms.u_time.value += 0.05;
   uniforms.time.value += 0.05;
-  // uniforms.u_feed.value = feed;
   renderer.render(scene, threeCam);
 }
 
@@ -320,7 +222,6 @@ function fragmentShader() {
 
 // this returns false if the fragment shader cannot compile
 // true if it can
-
 function checkFragmentShader(shaderCode, lint = false) {
   if (!gl) {
     return;
