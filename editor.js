@@ -8,20 +8,14 @@ import { CodemirrorBinding } from "y-codemirror";
 import "codemirror/mode/clike/clike.js";
 import 'codemirror/addon/lint/lint';
 import {__fragmentShader, __vertexShader} from "./defaultShaders.js";
-import * as THREE from "three";
 
 const OT = require('@opentok/client');
 
-var container;
-var threeCam, scene, renderer;
 var uniforms;
 
 var gl;
 
 var editor;
-var geometry;
-var material;
-var mesh;
 
 var isDirty = false;
 
@@ -50,7 +44,6 @@ let vertexCount;
 // scalers.
 
 let uScalingFactor;
-let uGlobalColor;
 let uResolution;
 let uTime;
 let uRotationVector;
@@ -149,7 +142,6 @@ function initYdoc() {
   //linter takes care of calling checkFragmentShader so we dont need
   // this editor.on function
   onEdit();
-  //init();
   //animate();
 }
 
@@ -157,7 +149,7 @@ function initYdoc() {
 // this function will trigger a change to the editor
 function onEdit() {
   const fragmentCode = editor.getValue();
-  //updateShader(fragmentCode);
+  updateShader(fragmentCode);
 }
 
 function updateShader(fragmentCode) {
@@ -167,26 +159,7 @@ function updateShader(fragmentCode) {
 
   _fragmentShader = fragmentCode;
 
-  //isDirty = true;
-}
-
-function updateScene() {
-  scene = new THREE.Scene();
-  geometry = new THREE.PlaneBufferGeometry(2, 2);
-
-  try {
-    material = new THREE.ShaderMaterial({
-      uniforms: uniforms,
-      vertexShader: vertexShader(),
-      fragmentShader: fragmentShader()
-    });
-  } catch (e) {
-    console.log("MY ERROR", e);
-    return;
-  }
-
-  mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
+  isDirty = true;
 }
 
 window.onload = (event) => {
@@ -207,15 +180,12 @@ function animateScene() {
 
     uScalingFactor =
           gl.getUniformLocation(shaderProgram, "uScalingFactor");
-    uGlobalColor =
-          gl.getUniformLocation(shaderProgram, "uGlobalColor");
     uResolution =
           gl.getUniformLocation(shaderProgram, "u_resolution");
     uTime =
           gl.getUniformLocation(shaderProgram, "u_time");
 
     gl.uniform2fv(uScalingFactor, currentScale);
-    gl.uniform4fv(uGlobalColor, [0.1, 0.7, 0.2, 1.0]);
     gl.uniform2fv(uResolution, resolution);
     gl.uniform1f(uTime, previousTime);
 
@@ -303,34 +273,8 @@ function webgl_startup() {
 
 // DONE WITH COPIED SECTION
 
-function init() {
-  container = document.getElementById("container");
-
-  threeCam = new THREE.Camera();
-  threeCam.position.z = 1;
-
-  uniforms = {
-    u_time: { type: "f", value: 1.0 },
-    u_resolution: { type: "v2", value: new THREE.Vector2() },
-    time: { type: "f", value: 1.0 },
-    resolution: { type: "v2", value: new THREE.Vector2() },
-    u_mouse: { type: "v2", value: new THREE.Vector2() },
-    u_camRot: { type: "v3", value: new THREE.Vector3() },
-  };
-
-  updateScene();
-  container = document.getElementById("container");
-  renderer = new THREE.WebGLRenderer();
-  renderer.setPixelRatio(window.devicePixelRatio);
-
-  gl = renderer.getContext();
-
-  container.appendChild(renderer.domElement);
-
-  onWindowResize();
-  window.addEventListener("resize", onWindowResize, false);
-}
-
+// TODO call this with
+// window.addEventListener("resize", onWindowResize, false);
 function onWindowResize(event) {
   renderer.setSize(container.offsetWidth, container.offsetHeight);
   if (isInPresentationMode()) {
@@ -386,7 +330,6 @@ function fragmentShaderNew() {
     precision highp float;
   #endif
 
-  uniform vec4 uGlobalColor;
   uniform vec2 u_resolution;
   uniform float u_time;
 
