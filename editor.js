@@ -36,9 +36,8 @@ let shaderProgram;
 // details
 
 let aspectRatio;
-let currentRotation = [0, 1];
 let currentScale = [1.0, 1.0];
-let currentAngle;
+let resolution;
 
 // Vertex information
 
@@ -52,6 +51,7 @@ let vertexCount;
 
 let uScalingFactor;
 let uGlobalColor;
+let uResolution;
 let uRotationVector;
 let aVertexPosition;
 
@@ -198,12 +198,9 @@ window.onload = (event) => {
 // https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Basic_2D_animation_example
 function animateScene() {
     gl.viewport(0, 0, glCanvas.width, glCanvas.height);
-    gl.clearColor(0.8, 0.9, 1.0, 1.0);
+    // This sets background color
+    gl.clearColor(1, 1, 1, 1);
     gl.clear(gl.COLOR_BUFFER_BIT);
-
-    let radians = currentAngle * Math.PI / 180.0;
-    currentRotation[0] = Math.sin(radians);
-    currentRotation[1] = Math.cos(radians);
 
     gl.useProgram(shaderProgram);
 
@@ -211,12 +208,12 @@ function animateScene() {
           gl.getUniformLocation(shaderProgram, "uScalingFactor");
     uGlobalColor =
           gl.getUniformLocation(shaderProgram, "uGlobalColor");
-    uRotationVector =
-          gl.getUniformLocation(shaderProgram, "uRotationVector");
+    uResolution =
+          gl.getUniformLocation(shaderProgram, "u_resolution");
 
     gl.uniform2fv(uScalingFactor, currentScale);
-    gl.uniform2fv(uRotationVector, currentRotation);
     gl.uniform4fv(uGlobalColor, [0.1, 0.7, 0.2, 1.0]);
+    gl.uniform2fv(uResolution, resolution);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
@@ -230,8 +227,6 @@ function animateScene() {
     gl.drawArrays(gl.TRIANGLES, 0, vertexCount);
 
     window.requestAnimationFrame(function(currentTime) {
-          let deltaAngle = ((currentTime - previousTime) / 1000.0) * degreesPerSecond;
-          currentAngle = (currentAngle + deltaAngle) % 360;
           previousTime = currentTime;
           animateScene();
     });
@@ -279,13 +274,17 @@ function webgl_startup() {
   shaderProgram = buildShaderProgram();
 
   aspectRatio = glCanvas.width/glCanvas.height;
-  currentRotation = [0, 1];
   currentScale = [1.0, aspectRatio];
+  resolution = [glCanvas.width, glCanvas.height];
 
   vertexArray = new Float32Array([
-          -0.5, 0.5, 0.5, 0.5, 0.5, -0.5,
-          -0.5, 0.5, 0.5, -0.5, -0.5, -0.5
-      ]);
+      -1, 1,
+      1, 1,
+      1, -1,
+      -1, 1,
+      1, -1,
+     -1, -1
+  ]);
 
   vertexBuffer = gl.createBuffer();
   gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
@@ -293,8 +292,6 @@ function webgl_startup() {
 
   vertexNumComponents = 2;
   vertexCount = vertexArray.length/vertexNumComponents;
-
-  currentAngle = 0.0;
 
   animateScene();
 }
@@ -368,17 +365,9 @@ function vertexShaderNew() {
 attribute vec2 aVertexPosition;
 
 uniform vec2 uScalingFactor;
-uniform vec2 uRotationVector;
 
 void main() {
-      vec2 rotatedPosition = vec2(
-              aVertexPosition.x * uRotationVector.y +
-                    aVertexPosition.y * uRotationVector.x,
-              aVertexPosition.y * uRotationVector.y -
-                    aVertexPosition.x * uRotationVector.x
-            );
-
-      gl_Position = vec4(rotatedPosition * uScalingFactor, 0.0, 1.0);
+      gl_Position = vec4(aVertexPosition * uScalingFactor, 0.0, 1.0);
 }
 `;
 }
@@ -394,9 +383,10 @@ function fragmentShaderNew() {
   #endif
 
   uniform vec4 uGlobalColor;
+  uniform vec2 u_resolution;
 
   void main() {
-        gl_FragColor = uGlobalColor;
+        gl_FragColor = vec4(gl_FragCoord.y / u_resolution.y, gl_FragCoord.x / u_resolution.x, 0.,1.0);
 }
   `;
 }
