@@ -52,6 +52,7 @@ let vertexCount;
 let uScalingFactor;
 let uGlobalColor;
 let uResolution;
+let uTime;
 let uRotationVector;
 let aVertexPosition;
 
@@ -210,10 +211,13 @@ function animateScene() {
           gl.getUniformLocation(shaderProgram, "uGlobalColor");
     uResolution =
           gl.getUniformLocation(shaderProgram, "u_resolution");
+    uTime =
+          gl.getUniformLocation(shaderProgram, "u_time");
 
     gl.uniform2fv(uScalingFactor, currentScale);
     gl.uniform4fv(uGlobalColor, [0.1, 0.7, 0.2, 1.0]);
     gl.uniform2fv(uResolution, resolution);
+    gl.uniform1f(uTime, previousTime);
 
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
@@ -384,9 +388,10 @@ function fragmentShaderNew() {
 
   uniform vec4 uGlobalColor;
   uniform vec2 u_resolution;
+  uniform float u_time;
 
   void main() {
-        gl_FragColor = vec4(gl_FragCoord.y / u_resolution.y, gl_FragCoord.x / u_resolution.x, 0.,1.0);
+        gl_FragColor = vec4(gl_FragCoord.y / u_resolution.y, gl_FragCoord.x / u_resolution.x, sin(u_time * .001), 1.0);
 }
   `;
 }
