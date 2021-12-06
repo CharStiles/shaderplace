@@ -79,7 +79,6 @@ function addCodeMirrorPresentModifier() {
 }
 
 function initYdoc() {
-  console.log("in init doc")
   const ydoc = new Y.Doc();
 
   const searchParams = new URLSearchParams(window.location.search);
@@ -138,11 +137,6 @@ function initYdoc() {
 
   // @ts-ignore
   window.example = { provider, ydoc, ytext, binding, Y };
-  //editor.on("change", onEdit);
-  //linter takes care of calling checkFragmentShader so we dont need
-  // this editor.on function
-  onEdit();
-  //animate();
 }
 
 
@@ -221,7 +215,7 @@ function compileShader(type, code) {
     if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
           console.log(`Error compiling ${type === gl.VERTEX_SHADER ? "vertex" : "fragment"} shader:`);
           console.log(gl.getShaderInfoLog(shader));
-        }
+    }
     return shader;
 }
 
@@ -245,7 +239,6 @@ function buildShaderProgram() {
 
   return program;
 }
-
 
 function webgl_startup() {
   glCanvas = document.getElementById("glcanvas");
