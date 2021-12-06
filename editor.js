@@ -201,8 +201,14 @@ function animateScene() {
     gl.drawArrays(gl.TRIANGLES, 0, vertexCount);
 
     window.requestAnimationFrame(function(currentTime) {
-          previousTime = currentTime;
-          animateScene();
+      previousTime = currentTime;
+      // TODO here check dirty bit and recompile?
+      if (isDirty) {
+        // recompile and clear dirty bit
+        shaderProgram = buildShaderProgram();
+        isDirty = false;
+      }
+      animateScene();
     });
 }
 
@@ -224,11 +230,11 @@ function buildShaderProgram() {
   let program = gl.createProgram();
     
   // Compile vertex shader
-  let shader = compileShader(gl.VERTEX_SHADER, vertexShaderNew());
+  let shader = compileShader(gl.VERTEX_SHADER, vertexShader());
   gl.attachShader(program, shader);
 
   // Compile fragment shader
-  shader = compileShader(gl.FRAGMENT_SHADER, fragmentShaderNew());
+  shader = compileShader(gl.FRAGMENT_SHADER, fragmentShader());
   gl.attachShader(program, shader);
 
   gl.linkProgram(program)
@@ -300,6 +306,7 @@ function render() {
   renderer.render(scene, threeCam);
 }
 
+/*
 function vertexShader() {
   return `        
     void main() {
@@ -307,8 +314,9 @@ function vertexShader() {
     }
   `;
 }
+*/
 
-function vertexShaderNew() {
+function vertexShader() {
   return `
 attribute vec2 aVertexPosition;
 
