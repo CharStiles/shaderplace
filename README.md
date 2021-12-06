@@ -15,8 +15,7 @@ go to http://localhost:8080/
 
 ## TODO:
 - Remove Three.js and replace with webGL
-- remove video sharing attempt
-- add backend
+- add backend for password, more permanent rooms
 - reorganize CSS
 - WebRTC implementation
 
@@ -25,8 +24,6 @@ go to http://localhost:8080/
 - undo manager
 - carot color
 - usernames to be above carot
-- better text readability (highlight)
-- add standard library and use with THREE's material.onBeforeCompile
 - add backbuffer texture input
 - add webcam texture input (for multiple users)
 - add audio input
