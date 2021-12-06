@@ -149,15 +149,15 @@ function initYdoc() {
   //linter takes care of calling checkFragmentShader so we dont need
   // this editor.on function
   onEdit();
-  init();
-  animate();
+  //init();
+  //animate();
 }
 
 
 // this function will trigger a change to the editor
 function onEdit() {
   const fragmentCode = editor.getValue();
-  updateShader(fragmentCode);
+  //updateShader(fragmentCode);
 }
 
 function updateShader(fragmentCode) {
@@ -167,7 +167,7 @@ function updateShader(fragmentCode) {
 
   _fragmentShader = fragmentCode;
 
-  isDirty = true;
+  //isDirty = true;
 }
 
 function updateScene() {
@@ -191,7 +191,7 @@ function updateScene() {
 
 window.onload = (event) => {
   webgl_startup();
-  //initYdoc();
+  initYdoc();
 }
 
 // START COPIED SECTION
