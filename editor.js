@@ -242,6 +242,12 @@ function buildShaderProgram() {
 
 function webgl_startup() {
   glCanvas = document.getElementById("glcanvas");
+  if (glCanvas.width != glCanvas.clientWidth) {
+    glCanvas.width = glCanvas.clientWidth;
+  }
+  if (glCanvas.height != glCanvas.clientHeight) {
+    glCanvas.height = glCanvas.clientHeight;
+  }
   gl = glCanvas.getContext("webgl");
 
   shaderProgram = buildShaderProgram();
