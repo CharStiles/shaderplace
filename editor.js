@@ -9,10 +9,6 @@ import "codemirror/mode/clike/clike.js";
 import 'codemirror/addon/lint/lint';
 import {__fragmentShader, __vertexShader} from "./defaultShaders.js";
 
-const OT = require('@opentok/client');
-
-var uniforms;
-
 var gl;
 
 var editor;
@@ -46,22 +42,13 @@ let vertexCount;
 let uScalingFactor;
 let uResolution;
 let uTime;
-let uRotationVector;
 let aVertexPosition;
 
 // Animation timing
 
 let previousTime = 0.0;
-let degreesPerSecond = 90.0;
 
 // ******* END webgl stuff
-
-// Handling all of our errors here by alerting them
-function handleError(error) {
-  if (error) {
-    alert(error.message);
-  }
-}
 
 
 function isInPresentationMode() {
@@ -278,72 +265,12 @@ function webgl_startup() {
 
 // DONE WITH COPIED SECTION
 
-// TODO call this with
-// window.addEventListener("resize", onWindowResize, false);
-function onWindowResize(event) {
-  renderer.setSize(container.offsetWidth, container.offsetHeight);
-  if (isInPresentationMode()) {
-    renderer.setSize(window.innerWidth, window.innerHeight);
-  }
-  uniforms.u_resolution.value.x = renderer.domElement.width;
-  uniforms.u_resolution.value.y = renderer.domElement.height;
-  uniforms.resolution.value.x = renderer.domElement.width;
-  uniforms.resolution.value.y = renderer.domElement.height;
-}
-
-function animate() {
-  requestAnimationFrame(animate);
-  render();
-}
-
-function render() {
-  if (isDirty) {
-    updateScene();
-  }
-  uniforms.u_time.value += 0.05;
-  uniforms.time.value += 0.05;
-  renderer.render(scene, threeCam);
-}
-
-/*
 function vertexShader() {
-  return `        
-    void main() {
-      gl_Position = vec4( position, 1.0 );
-    }
-  `;
-}
-*/
-
-function vertexShader() {
-  return `
-attribute vec2 aVertexPosition;
-
-uniform vec2 uScalingFactor;
-
-void main() {
-      gl_Position = vec4(aVertexPosition * uScalingFactor, 0.0, 1.0);
-}
-`;
+  return _vertexShader;
 }
 
 function fragmentShader() {
   return _fragmentShader;
-}
-
-function fragmentShaderNew() {
-  return `
-#ifdef GL_ES
-    precision highp float;
-  #endif
-
-  uniform vec2 u_resolution;
-  uniform float u_time;
-
-  void main() {
-        gl_FragColor = vec4(gl_FragCoord.y / u_resolution.y, gl_FragCoord.x / u_resolution.x, sin(u_time * .001), 1.0);
-}
-  `;
 }
 
 // this returns false if the fragment shader cannot compile
