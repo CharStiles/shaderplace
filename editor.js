@@ -9,28 +9,22 @@ import "codemirror/mode/clike/clike.js";
 import 'codemirror/addon/lint/lint';
 import {__fragmentShader, __vertexShader} from "./defaultShaders.js";
 
+// Element storage
 var gl;
-
 var editor;
-
-var isDirty = false;
-
-
-// **** BEGIN webgl stuff
-
-// let gl = null; Already exists
 let glCanvas = null;
+
+// Current state storage
+var isDirty = false;
 let shaderProgram;
 
 // Aspect ratio and coordinate system
 // details
-
 let aspectRatio;
 let currentScale = [1.0, 1.0];
 let resolution;
 
 // Vertex information
-
 let vertexArray;
 let vertexBuffer;
 let vertexNumComponents;
@@ -38,17 +32,13 @@ let vertexCount;
 
 // Rendering data shared with the
 // scalers.
-
 let uScalingFactor;
 let uResolution;
 let uTime;
 let aVertexPosition;
 
 // Animation timing
-
 let previousTime = 0.0;
-
-// ******* END webgl stuff
 
 
 function isInPresentationMode() {
@@ -148,9 +138,6 @@ window.onload = (event) => {
   initYdoc();
 }
 
-// START COPIED SECTION
-// Copied from
-// https://developer.mozilla.org/en-US/docs/Web/API/WebGL_API/Basic_2D_animation_example
 function animateScene() {
     gl.viewport(0, 0, glCanvas.width, glCanvas.height);
     // This sets background color
@@ -262,8 +249,6 @@ function webgl_startup() {
   animateScene();
 }
 
-
-// DONE WITH COPIED SECTION
 
 function vertexShader() {
   return _vertexShader;
