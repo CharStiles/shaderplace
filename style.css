@@ -117,13 +117,8 @@ footer {
 
 #enterScreen { caret-color: red; text-align: center; z-index:-100}
 
-.container-edit {
+.container {
   height: 100vh;
-  width: 100%;
-}
-
-.container-present {
-  height: 100%;
   width: 100%;
 }
 
