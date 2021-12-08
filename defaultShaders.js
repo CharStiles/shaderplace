@@ -13,7 +13,7 @@ void main(void)
 {
     vec2 normCoord = gl_FragCoord.xy/u_resolution;
     
-    float time = u_time/500.0; //slow down time
+    float time = u_time/5.0; //slow down time
 
     vec2 uv = -1. + 2. * normCoord;
     float r = sin(time + uv.x); 
