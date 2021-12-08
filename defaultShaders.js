@@ -6,19 +6,14 @@ precision mediump float;
 #endif
 
 uniform vec2 u_resolution;
-uniform vec2 u_mouse;
 uniform float u_time;
-uniform vec2 resolution;
-uniform float time;
-uniform sampler2D u_feed;
-uniform sampler2D u_feed0;
 
 // main is a reserved function that is going to be called first
 void main(void)
 {
     vec2 normCoord = gl_FragCoord.xy/u_resolution;
     
-    float time = u_time/5.0; //slow down time
+    float time = u_time/500.0; //slow down time
 
     vec2 uv = -1. + 2. * normCoord;
     float r = sin(time + uv.x); 
@@ -36,3 +31,15 @@ void main(void)
 }
 
 `;
+
+var _vertexShader = `
+attribute vec2 aVertexPosition;
+
+uniform vec2 uScalingFactor;
+
+void main() {
+  gl_Position = vec4(aVertexPosition * uScalingFactor, 0.0, 1.0);
+}
+
+`;
+

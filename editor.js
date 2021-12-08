@@ -7,30 +7,38 @@ import { WebsocketProvider } from "y-websocket";
 import { CodemirrorBinding } from "y-codemirror";
 import "codemirror/mode/clike/clike.js";
 import 'codemirror/addon/lint/lint';
-import __fragmentShader from "./fragmentShader.js";
-import * as THREE from "three";
+import {__fragmentShader, __vertexShader} from "./defaultShaders.js";
 
-const OT = require('@opentok/client');
-
-var container;
-var threeCam, scene, renderer;
-var uniforms;
-
+// Element storage
 var gl;
-
 var editor;
-var geometry;
-var material;
-var mesh;
+let glCanvas = null;
 
+// Current state storage
 var isDirty = false;
+let shaderProgram;
 
-// Handling all of our errors here by alerting them
-function handleError(error) {
-  if (error) {
-    alert(error.message);
-  }
-}
+// Aspect ratio and coordinate system
+// details
+let aspectRatio;
+let currentScale = [1.0, 1.0];
+let resolution;
+
+// Vertex information
+let vertexArray;
+let vertexBuffer;
+let vertexNumComponents;
+let vertexCount;
+
+// Rendering data shared with the
+// scalers.
+let uScalingFactor;
+let uResolution;
+let uTime;
+let aVertexPosition;
+
+// Animation timing
+let previousTime = 0.0;
 
 
 function isInPresentationMode() {
@@ -48,7 +56,6 @@ function addCodeMirrorPresentModifier() {
 }
 
 function initYdoc() {
-  console.log("in init doc")
   const ydoc = new Y.Doc();
 
   const searchParams = new URLSearchParams(window.location.search);
@@ -107,12 +114,6 @@ function initYdoc() {
 
   // @ts-ignore
   window.example = { provider, ydoc, ytext, binding, Y };
-  //editor.on("change", onEdit);
-  //linter takes care of calling checkFragmentShader so we dont need
-  // this editor.on function
-  onEdit();
-  init();
-  animate();
 }
 
 
@@ -132,88 +133,125 @@ function updateShader(fragmentCode) {
   isDirty = true;
 }
 
-function updateScene() {
-  scene = new THREE.Scene();
-  geometry = new THREE.PlaneBufferGeometry(2, 2);
-
-  try {
-    material = new THREE.ShaderMaterial({
-      uniforms: uniforms,
-      vertexShader: vertexShader(),
-      fragmentShader: fragmentShader()
-    });
-  } catch (e) {
-    console.log("MY ERROR", e);
-    return;
-  }
-
-  mesh = new THREE.Mesh(geometry, material);
-  scene.add(mesh);
-}
-
 window.onload = (event) => {
+  webgl_startup();
   initYdoc();
 }
 
-function init() {
-  container = document.getElementById("container");
+function animateScene() {
+    gl.viewport(0, 0, glCanvas.width, glCanvas.height);
+    // This sets background color
+    gl.clearColor(1, 1, 1, 1);
+    gl.clear(gl.COLOR_BUFFER_BIT);
 
-  threeCam = new THREE.Camera();
-  threeCam.position.z = 1;
+    gl.useProgram(shaderProgram);
 
-  uniforms = {
-    u_time: { type: "f", value: 1.0 },
-    u_resolution: { type: "v2", value: new THREE.Vector2() },
-    time: { type: "f", value: 1.0 },
-    resolution: { type: "v2", value: new THREE.Vector2() },
-    u_mouse: { type: "v2", value: new THREE.Vector2() },
-    u_camRot: { type: "v3", value: new THREE.Vector3() },
-  };
+    uScalingFactor =
+          gl.getUniformLocation(shaderProgram, "uScalingFactor");
+    uResolution =
+          gl.getUniformLocation(shaderProgram, "u_resolution");
+    uTime =
+          gl.getUniformLocation(shaderProgram, "u_time");
 
-  updateScene();
-  container = document.getElementById("container");
-  renderer = new THREE.WebGLRenderer();
-  renderer.setPixelRatio(window.devicePixelRatio);
+    gl.uniform2fv(uScalingFactor, currentScale);
+    gl.uniform2fv(uResolution, resolution);
+    gl.uniform1f(uTime, previousTime);
 
-  gl = renderer.getContext();
+    gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
-  container.appendChild(renderer.domElement);
+    aVertexPosition =
+          gl.getAttribLocation(shaderProgram, "aVertexPosition");
 
-  onWindowResize();
-  window.addEventListener("resize", onWindowResize, false);
+    gl.enableVertexAttribArray(aVertexPosition);
+    gl.vertexAttribPointer(aVertexPosition, vertexNumComponents,
+            gl.FLOAT, false, 0, 0);
+
+    gl.drawArrays(gl.TRIANGLES, 0, vertexCount);
+
+    window.requestAnimationFrame(function(currentTime) {
+      previousTime = currentTime;
+      // TODO here check dirty bit and recompile?
+      if (isDirty) {
+        // recompile and clear dirty bit
+        shaderProgram = buildShaderProgram();
+        isDirty = false;
+      }
+      animateScene();
+    });
 }
 
-function onWindowResize(event) {
-  renderer.setSize(container.offsetWidth, container.offsetHeight);
-  if (isInPresentationMode()) {
-    renderer.setSize(window.innerWidth, window.innerHeight);
+function compileShader(type, code) {
+    let shader = gl.createShader(type);
+
+    gl.shaderSource(shader, code);
+    gl.compileShader(shader);
+
+    if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+          console.log(`Error compiling ${type === gl.VERTEX_SHADER ? "vertex" : "fragment"} shader:`);
+          console.log(gl.getShaderInfoLog(shader));
+    }
+    return shader;
+}
+
+
+function buildShaderProgram() {
+  let program = gl.createProgram();
+    
+  // Compile vertex shader
+  let shader = compileShader(gl.VERTEX_SHADER, vertexShader());
+  gl.attachShader(program, shader);
+
+  // Compile fragment shader
+  shader = compileShader(gl.FRAGMENT_SHADER, fragmentShader());
+  gl.attachShader(program, shader);
+
+  gl.linkProgram(program)
+  if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+        console.log("Error linking shader program:");
+        console.log(gl.getProgramInfoLog(program));
   }
-  uniforms.u_resolution.value.x = renderer.domElement.width;
-  uniforms.u_resolution.value.y = renderer.domElement.height;
-  uniforms.resolution.value.x = renderer.domElement.width;
-  uniforms.resolution.value.y = renderer.domElement.height;
+
+  return program;
 }
 
-function animate() {
-  requestAnimationFrame(animate);
-  render();
-}
-
-function render() {
-  if (isDirty) {
-    updateScene();
+function webgl_startup() {
+  glCanvas = document.getElementById("glcanvas");
+  if (glCanvas.width != glCanvas.clientWidth) {
+    glCanvas.width = glCanvas.clientWidth;
   }
-  uniforms.u_time.value += 0.05;
-  uniforms.time.value += 0.05;
-  renderer.render(scene, threeCam);
+  if (glCanvas.height != glCanvas.clientHeight) {
+    glCanvas.height = glCanvas.clientHeight;
+  }
+  gl = glCanvas.getContext("webgl");
+
+  shaderProgram = buildShaderProgram();
+
+  aspectRatio = glCanvas.width/glCanvas.height;
+  currentScale = [1.0, aspectRatio];
+  resolution = [glCanvas.width, glCanvas.height];
+
+  vertexArray = new Float32Array([
+      -1, 1,
+      1, 1,
+      1, -1,
+      -1, 1,
+      1, -1,
+     -1, -1
+  ]);
+
+  vertexBuffer = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
+  gl.bufferData(gl.ARRAY_BUFFER, vertexArray, gl.STATIC_DRAW);
+
+  vertexNumComponents = 2;
+  vertexCount = vertexArray.length/vertexNumComponents;
+
+  animateScene();
 }
+
 
 function vertexShader() {
-  return `        
-    void main() {
-      gl_Position = vec4( position, 1.0 );
-    }
-  `;
+  return _vertexShader;
 }
 
 function fragmentShader() {

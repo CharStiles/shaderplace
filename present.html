@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <title>Shader.Place</title>
-    <script src="fragmentShader.js" defer></script>
+    <script src="defaultShaders.js" defer></script>
 
     <link rel=stylesheet href="https://codemirror.net/lib/codemirror.css"  async defer>
     <link rel="stylesheet" type="text/css" href="style.css" title="shaderplace">
@@ -13,7 +13,11 @@
   </head>
   <body>
 
-    <div id="container" class="container-present"></div>
+    <div class="displaywrapper">
+      <canvas id="glcanvas" class="container">
+        Oh no! Your browser doesn't support canvas!
+      </canvas>
+    </div>
     <div id="editor"></div>
   </body>
 </html>
