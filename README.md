@@ -14,7 +14,6 @@ $ npm start
 go to http://localhost:8080/
 
 ## TODO:
-- Remove Three.js and replace with webGL
 - add backend for password, more permanent rooms
 - reorganize CSS
 - WebRTC implementation
