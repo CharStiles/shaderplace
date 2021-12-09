@@ -169,7 +169,7 @@ function animateScene() {
     gl.drawArrays(gl.TRIANGLES, 0, vertexCount);
 
     window.requestAnimationFrame(function(currentTime) {
-      previousTime = currentTime;
+      previousTime = previousTime + .05;
       // TODO here check dirty bit and recompile?
       if (isDirty) {
         // recompile and clear dirty bit
