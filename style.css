@@ -1,6 +1,4 @@
-/* styles */
-/* called by your view template */
-
+/* GLOBAL STYLES */
 * {
   box-sizing: border-box;
 }
@@ -10,15 +8,13 @@ body {
   background-color : black;
   overflow : hidden;
   caret-color: red;
-  
-  
-/*   margin: 2em; */
 }
 
 h1 {
   font-style: italic;
   color: #d0ff37;
 }
+
 h2 {
   font-style: italic;
   color: #dbfa6b;
@@ -26,30 +22,13 @@ h2 {
   width: 50%;
   text-align: center;
 }
+
 h3 {
   font-style: italic;
   color: #d9fdaa;
   margin: auto;
   width: 50%;
   text-align: center;
-}
-
-.bold {
-  font-weight: bold;
-}
-p {
-  max-width: 600px;
-}
-
-form {
-/*   margin-bottom: 25px; */
-  padding: 15px;
-  background-color: cyan;
-  display: inline-block;
-  width: 100%;
-  max-width: 340px;
-  border-radius: 3px;
-  caret-color: red;
 }
 
 input {
@@ -80,20 +59,18 @@ button:active {
   box-shadow: none;
 }
 
-li {
-  margin-bottom: 5px;
-}
+/* UTILITY/HELPER CLASSES */
 
-footer {
-  margin-top: 50px;
-  padding-top: 25px;
-  border-top: 1px solid lightgrey;
+.displaywrapper {
+  height: 100vh;
+  width: 100%;
 }
 
 .hidden {
   display: none;
 }
 
+/* CLASSES */
 .wrapper {
   display: flex;
   flex-direction: row;
@@ -106,25 +83,22 @@ footer {
 
 .editor {
   width: 45%;
-  /* overflow: scroll; */
   max-height: 100vh;
 }
 
-.displaywrapper {
-  height: 100%;
-  width: 100%;
+.enterScreen { 
+  caret-color: red; 
+  text-align: center; 
+  z-index:-100;
 }
 
-#enterScreen { caret-color: red; text-align: center; z-index:-100}
-
-.container {
-  height: 100vh;
-  width: 100%;
+/* TODO create class for this */
+#room {
+  width: 30%;    
+  margin-left: auto;
+  margin-right: auto;
 }
 
-#room{width: 30%;    
-    margin-left: auto;
-    margin-right: auto}
 
 .CodeMirror-present {
   background-color: rgba(255, 255, 255, 0.0) !important;
@@ -140,11 +114,6 @@ footer {
   height: 100% !important;
 }
 
-#welcome-screen {
-  width: 100%;
-  height: 100%;
-}
-
 .remote-caret {
   position: relative;
   border-left: 1px solid black;
@@ -153,6 +122,7 @@ footer {
   margin-right: -1px;
   box-sizing: border-box;
 }
+
 .remote-caret > div {
   position: absolute;
   top: -1.05em;
@@ -170,10 +140,12 @@ footer {
   z-index: 3;
   transition: opacity .3s ease-in-out;
 }
+
 .remote-caret.hide-name > div {
   transition-delay: .7s;
   opacity: 0.5;
 }
+
 .remote-caret:hover > div {
   opacity: 1;
   transition-delay: 0s;
@@ -182,63 +154,71 @@ footer {
 .cm-searching {
   background-color: transparent;
   background-color: transparent;
-}::-webkit-scrollbar {
+}
+
+/*  TODO enable support for firefox */
+::-webkit-scrollbar {
   width: 11px;
   height: 11px;
 }
+
 ::-webkit-scrollbar-button {
   width: 0px;
   height: 0px;
 }
+
 ::-webkit-scrollbar-thumb {
   background: transparent;
   border: 1px solid #7e7e7e;
   border-radius: 50px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb:active {
   background: transparent;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
   border: 0px none #000000;
   border-radius: 53px;
 }
+
 ::-webkit-scrollbar-track:hover {
   background: transparent;
 }
+
 ::-webkit-scrollbar-track:active {
   background: transparent;
 }
+
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
+
 .CodeMirror-gutters {
   border-right: 1px solid #000;
   background-color: #000000;
 }
+
 .cm-s-default .cm-comment {
   color: rgb(255, 255, 255);
   mix-blend-mode: difference;
   text-shadow: 0px 0px 5px black,0px 0px 15px black;
 }
+
 span[role=presentation] { 
   background-color: rgba(255, 255, 255, 0.609); 
 }
+
 span.cm-tab[role=presentation] { 
-  background-color: transparent ; 
+  background-color: transparent; 
 }
+
 .CodeMirror-line{   
   caret-color: rgb(1, 255, 22) !important; 
   text-shadow: 1px 1px 2px rgb(112, 112, 112), 0 0 25px rgb(155, 155, 155), 0 0 5px rgb(143, 143, 143);
-  /* -1px 0 rgb(231, 231, 231), 0 1px rgb(255, 255, 255), 1px 0 white, 0 -1px white; */
-}
-/* element[role="presentation"] {
-  background-color: rgba(170, 223, 241, 0.424) !important; /*for overriding the old css styles */
-  /* } */ */
-
-canvas{
-  position: fixed; 
 }
