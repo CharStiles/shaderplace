@@ -1,4 +1,7 @@
-/* GLOBAL STYLES */
+/* ====================================
+  GLOBAL STYLES
+======================================= */
+
 * {
   box-sizing: border-box;
 }
@@ -59,7 +62,55 @@ button:active {
   box-shadow: none;
 }
 
-/* UTILITY/HELPER CLASSES */
+/* ====================================
+  SCROLLBAR STYLES
+======================================= */
+/*  TODO enable support for firefox */
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+::-webkit-scrollbar-button {
+  width: 0px;
+  height: 0px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border: 1px solid #7e7e7e;
+  border-radius: 50px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb:active {
+  background: transparent;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+  border: 0px none #000000;
+  border-radius: 53px;
+}
+
+::-webkit-scrollbar-track:hover {
+  background: transparent;
+}
+
+::-webkit-scrollbar-track:active {
+  background: transparent;
+}
+
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ====================================
+  UTILITY/HELPER CLASSES
+======================================= */
 
 .displaywrapper {
   height: 100vh;
@@ -70,7 +121,10 @@ button:active {
   display: none;
 }
 
-/* CLASSES */
+/* ====================================
+  COMPONENTS CLASSES
+======================================= */
+
 .wrapper {
   display: flex;
   flex-direction: row;
@@ -99,6 +153,9 @@ button:active {
   margin-right: auto;
 }
 
+/* ====================================
+  CodeMirror CUSTOM STYLES
+======================================= */
 
 .CodeMirror-present {
   background-color: rgba(255, 255, 255, 0.0) !important;
@@ -154,49 +211,6 @@ button:active {
 .cm-searching {
   background-color: transparent;
   background-color: transparent;
-}
-
-/*  TODO enable support for firefox */
-::-webkit-scrollbar {
-  width: 11px;
-  height: 11px;
-}
-
-::-webkit-scrollbar-button {
-  width: 0px;
-  height: 0px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: transparent;
-  border: 1px solid #7e7e7e;
-  border-radius: 50px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb:active {
-  background: transparent;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-  border: 0px none #000000;
-  border-radius: 53px;
-}
-
-::-webkit-scrollbar-track:hover {
-  background: transparent;
-}
-
-::-webkit-scrollbar-track:active {
-  background: transparent;
-}
-
-::-webkit-scrollbar-corner {
-  background: transparent;
 }
 
 .CodeMirror-gutters {
