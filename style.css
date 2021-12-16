@@ -34,6 +34,10 @@ h3 {
   text-align: center;
 }
 
+a {
+  overflow-wrap: break-word;
+}
+
 input {
   display: block;
   margin-bottom: 10px;
@@ -117,8 +121,8 @@ button:active {
   width: 100%;
 }
 
-.hidden {
-  display: none;
+.u-txtcenter {
+  text-align: center; 
 }
 
 /* ====================================
@@ -138,12 +142,6 @@ button:active {
 .editor {
   width: 45%;
   max-height: 100vh;
-}
-
-.enterScreen { 
-  caret-color: red; 
-  text-align: center; 
-  z-index:-100;
 }
 
 /* TODO create class for this */
