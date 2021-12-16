@@ -71,7 +71,7 @@ button:active {
 =======================================
   Only for webkit based browsers.
   For mozilla styles go to selector:
-  .CodeMirror-present
+  .CodeMirror
 ======================================= */
 
 ::-webkit-scrollbar {
@@ -136,13 +136,13 @@ button:active {
 .CodeMirror {
   width: 100%;
   height: 100%; 
+  scrollbar-color: rgba(0.5,0.5,0.5,1.0) rgba(0.5,0.5,0.5,.0); /* Mozilla styles */
 }
 
 .CodeMirror-present {
   background-color: rgba(255, 255, 255, 0.0) !important;
   text-shadow: 1px 1px #555555;
   caret-color: red !important;
-  scrollbar-color: rgba(0.5,0.5,0.5,1.0) rgba(0.5,0.5,0.5,.0); /* Mozilla styles */
   position: absolute;
   top: 0;
   left: 0;
