@@ -123,7 +123,7 @@ button:active {
   display: flex;
 }
 
-.editor {
+.editor-mode {
   width: 85%;
   max-height: 100vh;
   overflow-y: scroll;
@@ -135,9 +135,7 @@ button:active {
 
 .CodeMirror {
   width: 100%;
-  height: 100%;
-  /* ToDo: Change bg color in CodeMirror directly? */
-  background-color: #0e0e0e;
+  height: 100%; 
 }
 
 .CodeMirror-present {
@@ -145,9 +143,14 @@ button:active {
   text-shadow: 1px 1px #555555;
   caret-color: red !important;
   scrollbar-color: rgba(0.5,0.5,0.5,1.0) rgba(0.5,0.5,0.5,.0); /* Mozilla styles */
-  position: absolute !important;
+  position: absolute;
   top: 0;
   left: 0;
+}
+
+.CodeMirror-editor {
+  /* ToDo: Change bg color in CodeMirror directly or leave it here? */
+  background-color: #c5c5c5;
 }
 
 .remote-caret {
@@ -196,21 +199,16 @@ button:active {
   background-color: #000000;
 }
 
-.cm-s-default .cm-comment {
+.CodeMirror-present.cm-s-default .cm-comment {
   color: rgb(255, 255, 255);
   mix-blend-mode: difference;
   text-shadow: 0 0 5px black,0px 0px 15px black;
 }
 
-span[role=presentation] { 
-  background-color: rgba(255, 255, 255, 0.609); 
+.CodeMirror-present span[role=presentation] { 
+  background-color: rgba(255, 255, 255, 0.69); 
 }
 
 span.cm-tab[role=presentation] { 
   background-color: transparent; 
-}
-
-.CodeMirror-line{   
-  caret-color: rgb(1, 255, 22) !important; 
-  text-shadow: 1px 1px 2px rgb(112, 112, 112), 0 0 25px rgb(155, 155, 155), 0 0 5px rgb(143, 143, 143);
 }
