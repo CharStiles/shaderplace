@@ -9,24 +9,27 @@
 body {
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   background-color : black;
-  overflow : hidden;
+  overflow: hidden;
   caret-color: red;
 }
 
-h1 {
+h1,
+h2,
+h3 {
   font-style: italic;
+}
+
+h1 {
   color: #d0ff37;
 }
 
 h2 {
-  font-style: italic;
   color: #dbfa6b;
   margin: auto;
   width: 50%;
 }
 
 h3 {
-  font-style: italic;
   color: #d9fdaa;
   margin: auto;
   width: 50%;
@@ -44,7 +47,6 @@ input {
   border: 1px solid lightgrey;
   border-radius: 3px;
   font-size: 16px;
-  caret-color: red;
 }
 
 button {
@@ -66,46 +68,34 @@ button:active {
 
 /* ====================================
   SCROLLBAR STYLES
+=======================================
+  Only for webkit based browsers.
+  For mozilla styles go to selector:
+  .CodeMirror-present
 ======================================= */
-/*  TODO enable support for firefox */
+
 ::-webkit-scrollbar {
   width: 11px;
   height: 11px;
 }
 
 ::-webkit-scrollbar-button {
-  width: 0px;
-  height: 0px;
+  width: 0;
+  height: 0;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: transparent;
   border: 1px solid #7e7e7e;
   border-radius: 50px;
 }
 
-::-webkit-scrollbar-thumb:hover {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb:active {
-  background: transparent;
-}
-
 ::-webkit-scrollbar-track {
-  background: transparent;
-  border: 0px none #000000;
+  border: 0 none #000000;
   border-radius: 53px;
 }
 
-::-webkit-scrollbar-track:hover {
-  background: transparent;
-}
-
-::-webkit-scrollbar-track:active {
-  background: transparent;
-}
-
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-track,
 ::-webkit-scrollbar-corner {
   background: transparent;
 }
@@ -153,18 +143,19 @@ button:active {
   CodeMirror CUSTOM STYLES
 ======================================= */
 
+.CodeMirror {
+  width: 100%;
+  height: 100%;
+}
+
 .CodeMirror-present {
   background-color: rgba(255, 255, 255, 0.0) !important;
   text-shadow: 1px 1px #555555;
   caret-color: red !important;
-  scrollbar-color: rgba(0.5,0.5,0.5,1.0) rgba(0.5,0.5,0.5,.0);
+  scrollbar-color: rgba(0.5,0.5,0.5,1.0) rgba(0.5,0.5,0.5,.0); /* Mozilla styles */
   position: absolute !important;
   top: 0;
   left: 0;
-}
-
-.CodeMirror {
-  height: 100% !important;
 }
 
 .remote-caret {
