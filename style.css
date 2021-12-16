@@ -40,10 +40,10 @@ a {
 }
 
 input {
+  width: 30%;    
   display: block;
-  margin-bottom: 10px;
+  margin: 0 auto 10px;
   padding: 5px;
-  width: 100%;
   border: 1px solid lightgrey;
   border-radius: 3px;
   font-size: 16px;
@@ -104,13 +104,13 @@ button:active {
   UTILITY/HELPER CLASSES
 ======================================= */
 
-.displaywrapper {
-  height: 100vh;
-  width: 100%;
-}
-
 .u-txtcenter {
   text-align: center; 
+}
+
+.u-displaywrapper {
+  height: 100vh;
+  width: 100%;
 }
 
 /* ====================================
@@ -118,25 +118,15 @@ button:active {
 ======================================= */
 
 .wrapper {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: left;
-  align-items: left;
-  height: 100%;
   width: 100%;
+  height: 100%;
+  display: flex;
 }
 
 .editor {
-  width: 45%;
+  width: 85%;
   max-height: 100vh;
-}
-
-/* TODO create class for this */
-#room {
-  width: 30%;    
-  margin-left: auto;
-  margin-right: auto;
+  overflow-y: scroll;
 }
 
 /* ====================================
@@ -146,6 +136,8 @@ button:active {
 .CodeMirror {
   width: 100%;
   height: 100%;
+  /* ToDo: Change bg color in CodeMirror directly? */
+  background-color: #0e0e0e;
 }
 
 .CodeMirror-present {
@@ -197,7 +189,6 @@ button:active {
 
 .cm-searching {
   background-color: transparent;
-  background-color: transparent;
 }
 
 .CodeMirror-gutters {
@@ -208,7 +199,7 @@ button:active {
 .cm-s-default .cm-comment {
   color: rgb(255, 255, 255);
   mix-blend-mode: difference;
-  text-shadow: 0px 0px 5px black,0px 0px 15px black;
+  text-shadow: 0 0 5px black,0px 0px 15px black;
 }
 
 span[role=presentation] { 
