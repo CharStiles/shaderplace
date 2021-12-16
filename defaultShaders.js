@@ -1,6 +1,5 @@
 
-var _fragmentShader = `      
-      
+var _fragmentShader = `
 #ifdef GL_ES
 precision mediump float;
 #endif
