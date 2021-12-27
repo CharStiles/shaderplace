@@ -1,4 +1,7 @@
-/* GLOBAL STYLES */
+/* ====================================
+  GLOBAL STYLES
+======================================= */
+
 * {
   box-sizing: border-box;
 }
@@ -6,40 +9,44 @@
 body {
   font-family: "Benton Sans", "Helvetica Neue", helvetica, arial, sans-serif;
   background-color : black;
-  overflow : hidden;
+  overflow: hidden;
   caret-color: red;
 }
 
-h1 {
+h1,
+h2,
+h3 {
   font-style: italic;
+}
+
+h1 {
   color: #d0ff37;
 }
 
 h2 {
-  font-style: italic;
   color: #dbfa6b;
   margin: auto;
   width: 50%;
-  text-align: center;
 }
 
 h3 {
-  font-style: italic;
   color: #d9fdaa;
   margin: auto;
   width: 50%;
-  text-align: center;
+}
+
+a {
+  overflow-wrap: break-word;
 }
 
 input {
+  width: 30%;    
   display: block;
-  margin-bottom: 10px;
+  margin: 0 auto 10px;
   padding: 5px;
-  width: 100%;
   border: 1px solid lightgrey;
   border-radius: 3px;
   font-size: 16px;
-  caret-color: red;
 }
 
 button {
@@ -59,59 +66,91 @@ button:active {
   box-shadow: none;
 }
 
-/* UTILITY/HELPER CLASSES */
+/* ====================================
+  SCROLLBAR STYLES
+=======================================
+  Only for webkit based browsers.
+  For mozilla styles go to selector:
+  .CodeMirror
+======================================= */
 
-.displaywrapper {
+::-webkit-scrollbar {
+  width: 11px;
+  height: 11px;
+}
+
+::-webkit-scrollbar-button {
+  width: 0;
+  height: 0;
+}
+
+::-webkit-scrollbar-thumb {
+  border: 1px solid #7e7e7e;
+  border-radius: 50px;
+}
+
+::-webkit-scrollbar-track {
+  border: 0 none #000000;
+  border-radius: 53px;
+}
+
+::-webkit-scrollbar-thumb,
+::-webkit-scrollbar-track,
+::-webkit-scrollbar-corner {
+  background: transparent;
+}
+
+/* ====================================
+  UTILITY/HELPER CLASSES
+======================================= */
+
+.u-txtcenter {
+  text-align: center; 
+}
+
+.u-displaywrapper {
   height: 100vh;
   width: 100%;
 }
 
-.hidden {
-  display: none;
-}
+/* ====================================
+  COMPONENTS CLASSES
+======================================= */
 
-/* CLASSES */
 .wrapper {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: nowrap;
-  justify-content: left;
-  align-items: left;
-  height: 100%;
   width: 100%;
+  height: 100%;
+  display: flex;
 }
 
-.editor {
-  width: 45%;
+.editor-mode {
+  width: 85%;
   max-height: 100vh;
+  overflow-y: scroll;
 }
 
-.enterScreen { 
-  caret-color: red; 
-  text-align: center; 
-  z-index:-100;
-}
+/* ====================================
+  CodeMirror CUSTOM STYLES
+======================================= */
 
-/* TODO create class for this */
-#room {
-  width: 30%;    
-  margin-left: auto;
-  margin-right: auto;
+.CodeMirror {
+  width: 100%;
+  height: 100%; 
+  scrollbar-color: rgba(0.5,0.5,0.5,1.0) rgba(0.5,0.5,0.5,.0); /* Mozilla styles */
 }
-
 
 .CodeMirror-present {
   background-color: rgba(255, 255, 255, 0.0) !important;
   text-shadow: 1px 1px #555555;
   caret-color: red !important;
-  scrollbar-color: rgba(0.5,0.5,0.5,1.0) rgba(0.5,0.5,0.5,.0);
-  position: absolute !important;
+  position: absolute;
   top: 0;
   left: 0;
 }
 
-.CodeMirror {
-  height: 100% !important;
+.CodeMirror-editor {
+  /* ToDo: Change bg color in CodeMirror directly or leave it here? */
+  background-color: #c5c5c5;
 }
 
 .remote-caret {
@@ -153,50 +192,6 @@ button:active {
 
 .cm-searching {
   background-color: transparent;
-  background-color: transparent;
-}
-
-/*  TODO enable support for firefox */
-::-webkit-scrollbar {
-  width: 11px;
-  height: 11px;
-}
-
-::-webkit-scrollbar-button {
-  width: 0px;
-  height: 0px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: transparent;
-  border: 1px solid #7e7e7e;
-  border-radius: 50px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: transparent;
-}
-
-::-webkit-scrollbar-thumb:active {
-  background: transparent;
-}
-
-::-webkit-scrollbar-track {
-  background: transparent;
-  border: 0px none #000000;
-  border-radius: 53px;
-}
-
-::-webkit-scrollbar-track:hover {
-  background: transparent;
-}
-
-::-webkit-scrollbar-track:active {
-  background: transparent;
-}
-
-::-webkit-scrollbar-corner {
-  background: transparent;
 }
 
 .CodeMirror-gutters {
@@ -204,21 +199,16 @@ button:active {
   background-color: #000000;
 }
 
-.cm-s-default .cm-comment {
+.CodeMirror-present.cm-s-default .cm-comment {
   color: rgb(255, 255, 255);
   mix-blend-mode: difference;
-  text-shadow: 0px 0px 5px black,0px 0px 15px black;
+  text-shadow: 0 0 5px black,0px 0px 15px black;
 }
 
-span[role=presentation] { 
-  background-color: rgba(255, 255, 255, 0.609); 
+.CodeMirror-present span[role=presentation] { 
+  background-color: rgba(255, 255, 255, 0.69); 
 }
 
 span.cm-tab[role=presentation] { 
   background-color: transparent; 
-}
-
-.CodeMirror-line{   
-  caret-color: rgb(1, 255, 22) !important; 
-  text-shadow: 1px 1px 2px rgb(112, 112, 112), 0 0 25px rgb(155, 155, 155), 0 0 5px rgb(143, 143, 143);
 }

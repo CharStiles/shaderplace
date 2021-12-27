@@ -1,23 +1,25 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
-    <meta charset="utf-8" />
-    <title>Shader.Place</title>
-    <script src="defaultShaders.js" defer></script>
-    
-    <link rel=stylesheet href="https://codemirror.net/lib/codemirror.css"  async defer>
-    <link rel="stylesheet" type="text/css" href="style.css" title="shaderplace">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Shader.Place</title>    
+    <link rel="stylesheet" href="https://codemirror.net/lib/codemirror.css">
     <link rel="stylesheet" href="./node_modules/codemirror/addon/lint/lint.css">
+    <link rel="stylesheet" type="text/css" href="style.css" title="shaderplace">
+    <script src="defaultShaders.js" defer></script>
     <script type="text/javascript" src="./dist/codemirror.bundle.js" async></script>
-
   </head>
   <body>
 
     <div class="wrapper">
-      <div class="editor" id="editor"></div>
-      <canvas id="glcanvas" class="displaywrapper">
+      <div class="editor-mode" id="editor"></div>
+      <div class="u-displaywrapper">
+        <canvas id="glcanvas" class="u-displaywrapper">
           Oh no! Your browser doesn't support canvas!
-      </canvas>
+        </canvas>
+      </div>
     </div>
+
   </body>
 </html>

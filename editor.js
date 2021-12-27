@@ -55,6 +55,11 @@ function addCodeMirrorPresentModifier() {
   }
 }
 
+function addCodeMirrorEditorModifier() {
+  const codeMirrorDiv = document.querySelector(".CodeMirror");
+  if (codeMirrorDiv) codeMirrorDiv.classList.add("CodeMirror-editor");
+}
+
 function initYdoc() {
   const ydoc = new Y.Doc();
 
@@ -110,6 +115,8 @@ function initYdoc() {
 
   if (isInPresentationMode()) {
     addCodeMirrorPresentModifier();
+  } else {
+    addCodeMirrorEditorModifier();
   }
 
   // @ts-ignore
