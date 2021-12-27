@@ -202,7 +202,7 @@ button:active {
 .CodeMirror-present.cm-s-default .cm-comment {
   color: rgb(255, 255, 255);
   mix-blend-mode: difference;
-  text-shadow: 0 0 5px black,0px 0px 15px black;
+  text-shadow: 0 0 5px black, 0 0 15px black;
 }
 
 .CodeMirror-present span[role=presentation] { 
