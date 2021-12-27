@@ -21,7 +21,6 @@ let shaderProgram;
 // Aspect ratio and coordinate system
 // details
 let aspectRatio;
-let currentScale = [1.0, 1.0];
 let resolution;
 
 // Vertex information
@@ -32,7 +31,6 @@ let vertexCount;
 
 // Rendering data shared with the
 // scalers.
-let uScalingFactor;
 let uResolution;
 let uTime;
 let aVertexPosition;
@@ -153,14 +151,11 @@ function animateScene() {
 
     gl.useProgram(shaderProgram);
 
-    uScalingFactor =
-          gl.getUniformLocation(shaderProgram, "uScalingFactor");
     uResolution =
           gl.getUniformLocation(shaderProgram, "u_resolution");
     uTime =
           gl.getUniformLocation(shaderProgram, "u_time");
 
-    gl.uniform2fv(uScalingFactor, currentScale);
     gl.uniform2fv(uResolution, resolution);
     gl.uniform1f(uTime, previousTime);
 
@@ -234,7 +229,6 @@ function webgl_startup() {
   shaderProgram = buildShaderProgram();
 
   aspectRatio = glCanvas.width/glCanvas.height;
-  currentScale = [1.0, aspectRatio];
   resolution = [glCanvas.width, glCanvas.height];
 
   vertexArray = new Float32Array([
