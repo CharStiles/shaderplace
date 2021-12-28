@@ -7,12 +7,13 @@ import { WebsocketProvider } from "y-websocket";
 import { CodemirrorBinding } from "y-codemirror";
 import "codemirror/mode/clike/clike.js";
 import 'codemirror/addon/lint/lint';
-import {__fragmentShader, __vertexShader} from "./defaultShaders.js";
+import {_fragmentShaderC, _vertexShaderC} from "./defaultShaders.js";
 
 // Element storage
 var gl;
 var editor;
 let glCanvas = null;
+let _fragmentShader = _fragmentShaderC;
 
 // Current state storage
 var isDirty = false;
@@ -251,7 +252,7 @@ function webgl_startup() {
 
 
 function vertexShader() {
-  return _vertexShader;
+  return _vertexShaderC;
 }
 
 function fragmentShader() {
