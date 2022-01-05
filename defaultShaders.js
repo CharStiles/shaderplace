@@ -1,6 +1,4 @@
-
-var _fragmentShader = `      
-      
+export const _fragmentShaderC = `
 #ifdef GL_ES
 precision mediump float;
 #endif
@@ -32,13 +30,11 @@ void main(void)
 
 `;
 
-var _vertexShader = `
+export const _vertexShaderC = `
 attribute vec2 aVertexPosition;
 
-uniform vec2 uScalingFactor;
-
 void main() {
-  gl_Position = vec4(aVertexPosition * uScalingFactor, 0.0, 1.0);
+  gl_Position = vec4(aVertexPosition, 0.0, 1.0);
 }
 
 `;

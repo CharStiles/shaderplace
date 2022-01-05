@@ -7,12 +7,13 @@ import { WebsocketProvider } from "y-websocket";
 import { CodemirrorBinding } from "y-codemirror";
 import "codemirror/mode/clike/clike.js";
 import 'codemirror/addon/lint/lint';
-import {__fragmentShader, __vertexShader} from "./defaultShaders.js";
+import {_fragmentShaderC, _vertexShaderC} from "./defaultShaders.js";
 
 // Element storage
 var gl;
 var editor;
 let glCanvas = null;
+let _fragmentShader = _fragmentShaderC;
 
 // Current state storage
 var isDirty = false;
@@ -21,7 +22,6 @@ let shaderProgram;
 // Aspect ratio and coordinate system
 // details
 let aspectRatio;
-let currentScale = [1.0, 1.0];
 let resolution;
 
 // Vertex information
@@ -32,7 +32,6 @@ let vertexCount;
 
 // Rendering data shared with the
 // scalers.
-let uScalingFactor;
 let uResolution;
 let uTime;
 let aVertexPosition;
@@ -53,6 +52,11 @@ function addCodeMirrorPresentModifier() {
   if (codeMirrorDiv) {
     codeMirrorDiv.classList.add("CodeMirror-present");
   }
+}
+
+function addCodeMirrorEditorModifier() {
+  const codeMirrorDiv = document.querySelector(".CodeMirror");
+  if (codeMirrorDiv) codeMirrorDiv.classList.add("CodeMirror-editor");
 }
 
 function initYdoc() {
@@ -76,8 +80,8 @@ function initYdoc() {
     lineNumbers: true,
     mode: "x-shader/x-vertex",
     gutters: ["CodeMirror-lint-markers"],
-    lint: true//,
-    // lineWrapping: !isInPresentationMode()
+    lint: true,
+    lineWrapping: !isInPresentationMode()
   });
 
   const ytext = ydoc.getText("codemirror");
@@ -110,6 +114,8 @@ function initYdoc() {
 
   if (isInPresentationMode()) {
     addCodeMirrorPresentModifier();
+  } else {
+    addCodeMirrorEditorModifier();
   }
 
   // @ts-ignore
@@ -146,14 +152,11 @@ function animateScene() {
 
     gl.useProgram(shaderProgram);
 
-    uScalingFactor =
-          gl.getUniformLocation(shaderProgram, "uScalingFactor");
     uResolution =
           gl.getUniformLocation(shaderProgram, "u_resolution");
     uTime =
           gl.getUniformLocation(shaderProgram, "u_time");
 
-    gl.uniform2fv(uScalingFactor, currentScale);
     gl.uniform2fv(uResolution, resolution);
     gl.uniform1f(uTime, previousTime);
 
@@ -227,7 +230,6 @@ function webgl_startup() {
   shaderProgram = buildShaderProgram();
 
   aspectRatio = glCanvas.width/glCanvas.height;
-  currentScale = [1.0, aspectRatio];
   resolution = [glCanvas.width, glCanvas.height];
 
   vertexArray = new Float32Array([
@@ -251,7 +253,7 @@ function webgl_startup() {
 
 
 function vertexShader() {
-  return _vertexShader;
+  return _vertexShaderC;
 }
 
 function fragmentShader() {

@@ -7,7 +7,7 @@ A realtime livecode GLSL editor
 ## Quickstart!
 ```
 $ git clone https://github.com/CharStiles/shaderplace.git
-$ cd shdaerplace
+$ cd shaderplace
 $ npm i
 $ npm start
 ```
@@ -15,7 +15,6 @@ go to http://localhost:8080/
 
 ## TODO:
 - add backend for password, more permanent rooms
-- reorganize CSS
 - WebRTC implementation
 
 **High Priority**
@@ -31,8 +30,6 @@ go to http://localhost:8080/
 - organize code
 
 **Nice To have**
-- fav icon
-- [cant reproduce] fix scroll bug
 - webcam mice??
 - input images
 
