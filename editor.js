@@ -34,11 +34,92 @@ let vertexCount;
 // scalers.
 let uResolution;
 let uTime;
+let uVol;
 let aVertexPosition;
 
 // Animation timing
 let previousTime = 0.0;
+// this script is from cut-ruby.glitch.me
 
+// so good
+var FFT_SIZE = 512;
+var vol;
+
+if (window.isProduction && window.location.protocol !== "https:") {
+  window.location = "https://" + window.location.hostname;
+}
+
+class Camera {
+  constructor() {
+    this.video = document.createElement("video");
+    this.video.setAttribute("muted", true);
+    this.video.setAttribute("playsinline", false);
+
+    this.selfie = false;
+
+    this.audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  }
+
+  _startCapture() {
+    return navigator.mediaDevices
+      .getUserMedia({
+        audio: true,
+        video: false,
+      })
+      .then((stream) => {
+        this.stream = stream;
+        var source = this.audioCtx.createMediaStreamSource(stream);
+
+        this.analyser = this.audioCtx.createAnalyser();
+        this.analyser.smoothingTimeConstant = 0.9;
+        this.analyser.fftSize = FFT_SIZE;
+        source.connect(this.analyser);
+      });
+  }
+  init() {
+    this._startCapture();
+    return this._startCapture();
+  }
+  flip() {
+    this.selfie = !this.selfie;
+    this._startCapture();
+  }
+}
+
+let button = document.querySelector("button");
+let camera = new Camera();
+document.querySelector("body").appendChild(camera.video);
+
+document.addEventListener("click", function (e) {
+  camera
+    .init()
+    .then(start)
+    .catch((e) => console.error(e));
+});
+
+(function () {
+  camera
+    .init()
+    .then(start)
+    .catch((e) => console.error(e));
+})();
+
+function start() {}
+
+
+
+// from here https://hackernoon.com/creative-coding-using-the-microphone-to-make-sound-reactive-art-part1-164fd3d972f3
+// A more accurate way to get overall volume
+function getRMS(spectrum) {
+  var rms = 0;
+  for (var i = 0; i < spectrum.length; i++) {
+    rms += spectrum[i] * spectrum[i];
+  }
+  rms /= spectrum.length;
+  rms = Math.sqrt(rms);
+  let norm = rms / 128;
+  return (norm - 0.99) * 100;
+}
 
 function isInPresentationMode() {
   if (window.location.pathname.split('/').pop() == 'present.html') {
@@ -156,9 +237,21 @@ function animateScene() {
           gl.getUniformLocation(shaderProgram, "u_resolution");
     uTime =
           gl.getUniformLocation(shaderProgram, "u_time");
+    uVol =
+          gl.getUniformLocation(shaderProgram, "u_vol");
 
     gl.uniform2fv(uResolution, resolution);
     gl.uniform1f(uTime, previousTime);
+    if (camera && camera.analyser) {
+      var bufferLength = camera.analyser.frequencyBinCount;
+      var dataArray = new Uint8Array(bufferLength);
+  
+      camera.analyser.getByteTimeDomainData(dataArray);
+      gl.uniform1f(uVol, getRMS(dataArray));
+    }
+    else{
+      gl.uniform1f(uVol, 0.0);
+    }
 
     gl.bindBuffer(gl.ARRAY_BUFFER, vertexBuffer);
 
