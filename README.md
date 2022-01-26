@@ -1,5 +1,5 @@
 # Shader Place
-A realtime livecode GLSL editor
+A realtime collaborative livecode GLSL editor
 
 ## Requirements
 - node.js
