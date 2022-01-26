@@ -24,7 +24,7 @@ go to http://localhost:8080/
 - usernames to be above carot
 - add backbuffer texture input
 - add webcam texture input (for multiple users)
-- add audio input
+- add bins to audio input
 - menu for info on globals, hot keys and meta info
 - hot keys for hiding code
 - organize code
