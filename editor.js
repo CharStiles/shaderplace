@@ -88,7 +88,7 @@ class Camera {
 
 let button = document.querySelector("button");
 let camera = new Camera();
-document.querySelector("body").appendChild(camera.video);
+//document.querySelector("body").appendChild(camera.video);
 
 document.addEventListener("click", function (e) {
   camera
