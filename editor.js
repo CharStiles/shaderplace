@@ -128,6 +128,22 @@ function isInPresentationMode() {
   return false;
 }
 
+function isLockedPresent(){
+  const queryString = window.location.search;
+  console.log(queryString);
+  const urlParams = new URLSearchParams(queryString);
+  const pw = urlParams.get('pw')
+  const room = urlParams.get('room')
+  console.log(room)
+ // if you hack into my classroom I will cry in front of everyone :,( 
+  if(pw != "WhyDoesDotEnvEvadeMe" && room.toLowerCase()== "classroom"){
+    return true;
+	  console.log("youre a student, in student mode")
+  }
+  
+  return false;
+}
+
 function addCodeMirrorPresentModifier() {
   const codeMirrorDiv = document.querySelector(".CodeMirror");
   if (codeMirrorDiv) {
@@ -162,7 +178,9 @@ function initYdoc() {
     mode: "x-shader/x-vertex",
     gutters: ["CodeMirror-lint-markers"],
     lint: true,
-    lineWrapping: !isInPresentationMode()
+    lineWrapping: !isInPresentationMode(),
+    readOnly: isLockedPresent()
+	  //editable: false //!isLockedPresent()
   });
 
   const ytext = ydoc.getText("codemirror");

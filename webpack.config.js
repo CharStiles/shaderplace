@@ -19,6 +19,9 @@ module.exports = {
     inline:true,
     disableHostCheck: true,
     watchContentBase: true,
-    publicPath: '/dist/'
+    publicPath: '/dist/',
+    historyApiFallback: {
+      index: 'index.html'
+    }
   }
 }
