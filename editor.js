@@ -87,22 +87,22 @@ class Camera {
 }
 
 let button = document.querySelector("button");
-let camera = new Camera();
+let camera;// new Camera();
 //document.querySelector("body").appendChild(camera.video);
 
-document.addEventListener("click", function (e) {
-  camera
-    .init()
-    .then(start)
-    .catch((e) => console.error(e));
-});
+// document.addEventListener("click", function (e) {
+//   camera
+//     .init()
+//     .then(start)
+//     .catch((e) => console.error(e));
+// });
 
-(function () {
-  camera
-    .init()
-    .then(start)
-    .catch((e) => console.error(e));
-})();
+// (function () {
+//   camera
+//     .init()
+//     .then(start)
+//     .catch((e) => console.error(e));
+// })();
 
 function start() {}
 
