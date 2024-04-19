@@ -3,7 +3,8 @@
 // @ts-ignore
 import CodeMirror from "codemirror";
 import * as Y from "yjs";
-import { WebsocketProvider } from "y-websocket";
+//import { WebsocketProvider } from "y-websocket";
+import { WebrtcProvider } from 'y-webrtc'
 import { CodemirrorBinding } from "y-codemirror";
 import "codemirror/mode/clike/clike.js";
 import 'codemirror/addon/lint/lint';
@@ -165,11 +166,13 @@ function initYdoc() {
     room = searchParams.get("room");
   }
 
-  const provider = new WebsocketProvider(
-    "wss://demos.yjs.dev",
-    room,
-    ydoc
-  );
+  // const provider = new WebsocketProvider(
+  //   "wss://demos.yjs.dev",
+  //   room,
+  //   ydoc
+  // );
+
+  const provider = new WebrtcProvider(room, ydoc)
 
   var editorContainer = document.getElementById("editor");
   editor = CodeMirror(editorContainer, {
