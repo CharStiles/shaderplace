@@ -166,10 +166,11 @@ function initYdoc() {
   }
 
   const provider = new WebsocketProvider(
-    "wss://demos.yjs.dev",
+    `ws${location.protocol.slice(4)}//${location.host}/ws`,
     room,
     ydoc
   );
+  // const provider = new WebsocketProvider('wss://localhost:8080', room, ydoc, { WebSocketPolyfill: require('ws') })
 
   var editorContainer = document.getElementById("editor");
   editor = CodeMirror(editorContainer, {
@@ -191,25 +192,28 @@ function initYdoc() {
       ytext.insert(0, _fragmentShader);
     }
   };
-  if (provider.synced) {
+
+
+  if (provider.sync) {
     setDefaultVal();
   } else {
-    provider.once("synced", setDefaultVal);
+    provider.on("sync", setDefaultVal);
   }
 
-  editor.getDoc().markText(
-    {
-      line: 5,
-      ch: 1
-    },
-    {
-      line: 50,
-      ch: 3
-    },
-    {
-      css: "color : red"
-    }
-  );
+  setDefaultVal();
+  // editor.getDoc().markText(
+  //   {
+  //     line: 5,
+  //     ch: 1
+  //   },
+  //   {
+  //     line: 50,
+  //     ch: 3
+  //   },
+  //   {
+  //     css: "color : red"
+  //   }
+  // );
 
   if (isInPresentationMode()) {
     addCodeMirrorPresentModifier();
