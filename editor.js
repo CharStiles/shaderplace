@@ -3,8 +3,8 @@
 // @ts-ignore
 import CodeMirror from "codemirror";
 import * as Y from "yjs";
-//import { WebsocketProvider } from "y-websocket";
-import { WebrtcProvider } from 'y-webrtc'
+import { WebsocketProvider } from "y-websocket";
+//import { WebrtcProvider } from 'y-webrtc'
 import { CodemirrorBinding } from "y-codemirror";
 import "codemirror/mode/clike/clike.js";
 import 'codemirror/addon/lint/lint';
