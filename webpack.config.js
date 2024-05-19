@@ -16,7 +16,6 @@ module.exports = {
   devServer: {
     contentBase: path.join(__dirname),
     compress: true,
-    socket: 'socket',
     inline:true,
     disableHostCheck: true,
     watchContentBase: true,
