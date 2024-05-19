@@ -8,7 +8,7 @@ A realtime collaborative livecode GLSL editor
 ```
 $ git clone https://github.com/CharStiles/shaderplace.git
 $ cd shaderplace
-$ npm i
+$ npm i --legacy-peer-deps
 $ npm start
 ```
 go to http://localhost:8080/
