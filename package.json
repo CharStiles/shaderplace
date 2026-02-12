@@ -4,6 +4,7 @@
   "description": "❤ a place for shader collaboration ❤",
   "scripts": {
     "dist": "webpack --mode=production --watch",
+    "build": "webpack --mode=production",
     "start": "webpack-dev-server --open-page index.html"
   },
   "author": "Char Stiles <contact@charstiles.com>",
@@ -22,6 +23,7 @@
     "webpack-dev-server": "^3.11.1",
     "y-codemirror": "^2.0.9",
     "y-webrtc": "^10.3.0",
+    "y-websocket": "^2.0.4",
     "yjs": "^13.4.12"
   }
 }
