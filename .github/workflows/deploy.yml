@@ -1,0 +1,61 @@
+# GitHub Actions workflow for deploying shaderplace to GitHub Pages
+# Site: http://charstiles.github.io/shaderplace
+
+name: Deploy shaderplace to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "shaderplace-pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Checkout shaderplace repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js environment
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: 'npm'
+
+      - name: Install project dependencies
+        run: npm i --legacy-peer-deps
+
+      - name: Build webpack bundles
+        run: npm run build
+
+      - name: Assemble site for deployment
+        run: |
+          mkdir -p _site/dist
+          cp -r dist/* _site/dist/
+          cp index.html edit.html present.html _site/
+          cp style.css lint.css favicon.ico _site/
+          cp defaultShaders.js camera.js _site/
+          cp -r img _site/
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '_site'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
