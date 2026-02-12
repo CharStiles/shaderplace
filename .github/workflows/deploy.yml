@@ -1,5 +1,5 @@
 # GitHub Actions workflow for deploying shaderplace to GitHub Pages
-# Site: http://charstiles.github.io/shaderplace
+# Site: https://charstiles.github.io/shaderplace
 
 name: Deploy shaderplace to GitHub Pages
 
