@@ -1,3 +1,5 @@
+http://charstiles.github.io/shaderplace
+
 # Shader Place
 A realtime collaborative livecode GLSL editor
 
